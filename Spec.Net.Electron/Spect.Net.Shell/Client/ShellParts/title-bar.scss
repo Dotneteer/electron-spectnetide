@@ -1,0 +1,44 @@
+﻿.title-bar {
+    display: flex;
+    flex-shrink: 0;
+    height: 30px;
+    width: 100%;
+    color: white;
+    align-items: center;
+    justify-content: start;
+    font-size: 0.9em;
+    background-color: var(--menu-bar-background-color);
+    -webkit-app-region: drag;
+
+    & .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        margin: 0px 8px;
+    }
+
+    & .title-buttons {
+        display: flex;
+        flex-grow: 0;
+        flex-shrink: 0;
+        height: 100%;
+        -webkit-app-region: no-drag;
+    }
+
+    & .window-control {
+        display: flex;
+        width: 45px;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background-color: var(--menu-active-background-color);
+
+            &.close {
+                background-color: #d71526;
+            }
+        }
+    }
+}

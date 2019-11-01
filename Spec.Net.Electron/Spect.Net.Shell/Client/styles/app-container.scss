@@ -1,0 +1,16 @@
+﻿.app-container {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 100%;
+    background-color: var(--app-background-color);
+    user-select: none;
+
+    &.vertical-resize {
+        cursor: ns-resize;
+    }
+
+    &.horizontal-resize {
+        cursor: ew-resize;
+    }
+}
