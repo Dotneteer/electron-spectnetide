@@ -1,12 +1,10 @@
-using ElectronNET.API;
-using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
-using System.Threading.Tasks;
+using Spect.Net.Shell.Server.Messaging;
 
 namespace Spect.Net.Shell.Server
 {
@@ -46,15 +44,7 @@ namespace Spect.Net.Shell.Server
                 endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
             });
 
-            var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions
-            {
-                Width = 1152,
-                Height = 864,
-                Show = true
-            });
-
-            browserWindow.OnReadyToShow += () => browserWindow.Show();
-            browserWindow.SetTitle("SpectNetIDE");
+            await AppWindow.Create();
         }
     }
 }

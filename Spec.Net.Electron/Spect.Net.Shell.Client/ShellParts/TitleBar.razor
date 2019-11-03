@@ -1,9 +1,11 @@
-﻿<div class="title-bar">
+﻿@inject IJSRuntime JsRuntime
+
+<div class="title-bar">
     <div class="logo">
         <img src="assets/images/spectnet-logo.png" />
     </div>
-    <MenuBar TitleColor="white"/>
-    <AppCaption TitleColor="white"/>
+    <MenuBar TitleColor="white" />
+    <AppCaption TitleColor="white" />
     <div class="title-buttons">
         <div class="window-control">
             <SvgIcon IconName="minimize" Width="10" Height="10" Fill="white" />
@@ -11,7 +13,7 @@
         <div class="window-control">
             <SvgIcon IconName="restore" Width="10" Height="10" Fill="white" />
         </div>
-        <div class="window-control">
+        <div class="window-control" @onclick="OnMaximizeClick">
             <SvgIcon IconName="maximize" Width="10" Height="10" Fill="white" />
         </div>
         <div class="window-control close">
@@ -22,4 +24,8 @@
 
 @code {
 
+    private Task OnMaximizeClick()
+    {
+        return JsRuntime.Maximize();
+    }
 }

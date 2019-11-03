@@ -1,17 +1,22 @@
-﻿import {ipcRenderer} from "electron";
+﻿import {ipcRenderer, remote} from "electron";
+
+/**
+ * Let's declare the DotNet object
+ */
+declare const DotNet: any;
 
 class SpectNetShellJsInterop {
-    public hello(): void {
-        console.log("Hello...");
-    }
-
+    // ========================================================================
+    // IPC
     /**
      * Sets up a channel the renderer process listens to
      * @param channel Channel name
      */
     public setupListener(channel: string): void {
+        console.log(`Listener set up for ${channel}`)
         ipcRenderer.on(channel, (_event: any, response: any) => {
-            console.log(JSON.stringify(response, null, 2));
+            console.log("Got it");
+            DotNet.invokeMethodAsync("Spect.Net.Shell.Client", "HandleMessage", response);
         });
     }
 
@@ -22,6 +27,23 @@ class SpectNetShellJsInterop {
      */
     public sendMessage(channel: string, message: any): void {
         ipcRenderer.send(channel, message);
+        console.log(`Message ${message} sent on ${channel}`)
+    }
+
+    // ========================================================================
+    // BrowserWindow
+    /**
+     * Checks if the current browser window is maximized.
+     */
+    public isBrowserWindowMaximized(): boolean {
+        return remote.getCurrentWindow().isMaximized();
+    }
+
+    /**
+     * Maximizes the current browser window
+     */
+    public maximize(): void {
+        remote.getCurrentWindow().maximize();
     }
 }
 

@@ -4,22 +4,16 @@
     /// Represents an abstract message type that can be either a request or a 
     /// response.
     /// </summary>
-    public abstract class AbstractMessage
+    public abstract class MessageBase
     {
         /// <summary>
         /// Type of the message
         /// </summary>
-        public string MessageType { get; }
+        public string MessageType { get; set; }
 
         /// <summary>
         /// Message correlation ID
         /// </summary>
         public int? CorrelationId { get; set; }
-
-        protected AbstractMessage(string messageType, int? correlationId = null)
-        {
-            MessageType = messageType;
-            CorrelationId = correlationId;
-        }
     }
 }

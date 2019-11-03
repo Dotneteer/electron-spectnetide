@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-using System.Collections.Generic;
+﻿using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
 namespace Spect.Net.Shell.Shared.Messaging
@@ -18,21 +16,14 @@ namespace Spect.Net.Shell.Shared.Messaging
     ///
     /// You can use this class as a base class to implement your messages.
     /// </remarks>
-    public class MessengerServiceBase<TRequest, TResponse>
-        where TRequest: AbstractMessage
-        where TResponse: AbstractMessage
+    public class MessengerServiceBase
     {
         /// <summary>
-        /// Access the state service of the app
+        /// Access the JS Interop object
         /// </summary>
-        [Inject]
-        public IJSRuntime JsRuntime { get; set; }
-
-        private readonly Dictionary<int, TaskCompletionSource<TResponse>> _ongoingRequests
-            = new Dictionary<int, TaskCompletionSource<TResponse>>();
+        public IJSRuntime JsRuntime { get; }
 
         private bool _channelInitialized;
-        private int _messageId = 1;
 
         /// <summary>
         /// The channel this messanger communicates on
@@ -42,18 +33,25 @@ namespace Spect.Net.Shell.Shared.Messaging
         /// <summary>
         /// Instantiates a messenger that communicates through the specified channel
         /// </summary>
+        /// <param name="jsRuntime">JS Interop object</param>
         /// <param name="channel">Channel name</param>
-        protected MessengerServiceBase(string channel)
+        protected MessengerServiceBase(IJSRuntime jsRuntime, string channel)
         {
+            JsRuntime = jsRuntime;
             Channel = channel;
             _channelInitialized = false;
         }
 
-        public async Task Post<TRequestMessage>(TRequestMessage message)
-            where TRequestMessage: TRequest
+        public async Task Post(MessageBase messageBase)
         {
             await EnsureChannel();
-            await SpectNetShellInterop.SendMessage(JsRuntime, Channel, message);
+            await JsRuntime.SendMessage(Channel, messageBase);
+        }
+
+        public async Task Send(MessageBase messageBase)
+        {
+            await EnsureChannel();
+            await JsRuntime.SendMessage(Channel, messageBase);
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace Spect.Net.Shell.Shared.Messaging
         {
             if (!_channelInitialized)
             {
-                await SpectNetShellInterop.SetupListener(JsRuntime, Channel);
+                await JsRuntime.SetupListener(Channel);
                 _channelInitialized = true;
             }
         }
