@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj" />
+    <ProjectReference Include="..\Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj" />
   </ItemGroup>
 
 </Project>

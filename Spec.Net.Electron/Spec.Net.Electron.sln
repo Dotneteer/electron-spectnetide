@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spect.Net.Shell.Server", "Spect.Net.Shell\Server\Spect.Net.Shell.Server.csproj", "{0B5DF9EC-DCD1-4F3A-8D60-8F45EA3DEFCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spect.Net.Shell.Shared", "Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj", "{FBB868ED-A929-4911-8A67-A4A9C27292EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spect.Net.Shell.Client", "Spect.Net.Shell\Client\Spect.Net.Shell.Client.csproj", "{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spect.Net.Shell.Client", "Spect.Net.Shell.Client\Spect.Net.Shell.Client.csproj", "{7229C9A8-0A34-42D1-8052-5743B380034D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spect.Net.Shell.Shared", "Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj", "{FBB868ED-A929-4911-8A67-A4A9C27292EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spect.Net.Shell.Server", "Spect.Net.Shell.Server\Spect.Net.Shell.Server.csproj", "{22DBBA83-DC2A-4F4B-AD3C-3551413D261B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0B5DF9EC-DCD1-4F3A-8D60-8F45EA3DEFCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B5DF9EC-DCD1-4F3A-8D60-8F45EA3DEFCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B5DF9EC-DCD1-4F3A-8D60-8F45EA3DEFCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B5DF9EC-DCD1-4F3A-8D60-8F45EA3DEFCF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7229C9A8-0A34-42D1-8052-5743B380034D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7229C9A8-0A34-42D1-8052-5743B380034D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7229C9A8-0A34-42D1-8052-5743B380034D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7229C9A8-0A34-42D1-8052-5743B380034D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22DBBA83-DC2A-4F4B-AD3C-3551413D261B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22DBBA83-DC2A-4F4B-AD3C-3551413D261B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22DBBA83-DC2A-4F4B-AD3C-3551413D261B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22DBBA83-DC2A-4F4B-AD3C-3551413D261B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

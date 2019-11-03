@@ -12,12 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj" />
-    <ProjectReference Include="..\Client\Spect.Net.Shell.Client.csproj" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\Spect.Net.Shell.Client\Spect.Net.Shell.Client.csproj" />
+    <ProjectReference Include="..\Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj" />
   </ItemGroup>
 
 </Project>
