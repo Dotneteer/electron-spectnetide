@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spect.Net.Shell.Server", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spect.Net.Shell.Client", "Spect.Net.Shell\Client\Spect.Net.Shell.Client.csproj", "{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spect.Net.Shell.Shared", "Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj", "{FBB868ED-A929-4911-8A67-A4A9C27292EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34B41A49-F43B-456A-A4C1-DF7B0A9A3B8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBB868ED-A929-4911-8A67-A4A9C27292EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

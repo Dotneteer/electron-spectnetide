@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+@inject IJSRuntime JsRuntime
 @inject IThemingService<ThemeProps> ThemingService
 
     <div class="app-container" style="@_themeStyle">
@@ -11,7 +12,7 @@
 @code {
     private string _themeStyle;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         base.OnInitialized();
 
@@ -20,6 +21,7 @@
         ThemingService.RegisterTheme(new ThemeInfo<ThemeProps>("light", "Light", StockThemes.LightTheme));
         ThemingService.ThemeChanged += OnThemeChanged;
         ThemingService.SetTheme("dark");
+        await SpectNetShellInterop.Hello(JsRuntime);
     }
 
     private void OnThemeChanged(object sender, EventArgs e)

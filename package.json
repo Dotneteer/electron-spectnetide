@@ -1,0 +1,23 @@
+{
+  "name": "electron-spectnetide",
+  "version": "1.0.0",
+  "description": "The Electron Shell implementation of the SpectNetIDE project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dotneteer/electron-spectnetide.git"
+  },
+  "keywords": [],
+  "author": "Istvan Novak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dotneteer/electron-spectnetide/issues"
+  },
+  "homepage": "https://github.com/Dotneteer/electron-spectnetide#readme",
+  "dependencies": {
+    "electron": "^7.0.1"
+  }
+}

@@ -138,3 +138,6 @@ html, body {
   flex-grow: 0;
   height: 100%;
   -webkit-app-region: no-drag; }
+
+.access-key.highlight {
+  text-decoration: underline; }
