@@ -2,6 +2,7 @@
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using Spect.Net.Shell.Server.Messaging;
+using Spect.Net.Shell.Server.State;
 
 namespace Spect.Net.Shell.Server
 {
@@ -31,6 +32,8 @@ namespace Spect.Net.Shell.Server
 
         public SampleMessageProcessor SampleMessageProcessor { get; }
 
+        public AppActionMessageProcessor AppActionMessageProcessor { get; }
+
         /// <summary>
         /// Gets the BrowserWindows that displays this app
         /// </summary>
@@ -40,6 +43,7 @@ namespace Spect.Net.Shell.Server
         {
             Window = window;
             SampleMessageProcessor = new SampleMessageProcessor(window);
+            AppActionMessageProcessor = new AppActionMessageProcessor(window);
         }
     }
 }

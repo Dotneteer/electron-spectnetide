@@ -5,5 +5,7 @@
     /// </summary>
     public sealed class AppState
     {
+        public WindowState WindowState { get; set; }
+        public bool HasFocus { get; set; }
     }
 }

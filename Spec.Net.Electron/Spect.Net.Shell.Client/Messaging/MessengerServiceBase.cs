@@ -1,7 +1,9 @@
-﻿using Microsoft.JSInterop;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.JSInterop;
+using Spect.Net.Shell.Shared;
+using Spect.Net.Shell.Shared.Messaging;
 
-namespace Spect.Net.Shell.Shared.Messaging
+namespace Spect.Net.Shell.Client.Messaging
 {
     /// <summary>
     /// This abstract class implements correlated messaging between 

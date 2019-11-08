@@ -35,13 +35,5 @@ namespace Spect.Net.Shell.Shared
         {
             return await jsRuntime.InvokeAsync<bool>("SpectNetShell.isBrowserWindowMaximized");
         }
-
-        /// <summary>
-        /// Sends a message to the specified channel
-        /// </summary>
-        public static async Task Maximize(this IJSRuntime jsRuntime)
-        {
-            await jsRuntime.InvokeAsync<object>("SpectNetShell.maximize");
-        }
     }
 }

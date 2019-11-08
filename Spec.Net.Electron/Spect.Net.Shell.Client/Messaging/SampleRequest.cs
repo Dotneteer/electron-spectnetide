@@ -1,4 +1,6 @@
-﻿namespace Spect.Net.Shell.Shared.Messaging
+﻿using Spect.Net.Shell.Shared.Messaging;
+
+namespace Spect.Net.Shell.Client.Messaging
 {
     public class SampleRequest: MessageBase
     {

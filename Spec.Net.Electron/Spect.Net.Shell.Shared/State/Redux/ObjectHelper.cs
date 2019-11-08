@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Spect.Net.Shell.Shared.State
+namespace Spect.Net.Shell.Shared.State.Redux
 {
     /// <summary>
     /// This class provides helpers for state management

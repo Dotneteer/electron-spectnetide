@@ -16,7 +16,7 @@ class SpectNetShellJsInterop {
         console.log(`Listener set up for ${channel}`)
         ipcRenderer.on(channel, (_event: any, response: any) => {
             console.log("Got it");
-            DotNet.invokeMethodAsync("Spect.Net.Shell.Client", "HandleMessage", response);
+            DotNet.invokeMethodAsync("Spect.Net.Shell.Client", "HandleMessage", channel, response);
         });
     }
 
@@ -37,13 +37,6 @@ class SpectNetShellJsInterop {
      */
     public isBrowserWindowMaximized(): boolean {
         return remote.getCurrentWindow().isMaximized();
-    }
-
-    /**
-     * Maximizes the current browser window
-     */
-    public maximize(): void {
-        remote.getCurrentWindow().maximize();
     }
 }
 

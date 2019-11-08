@@ -1,4 +1,6 @@
-﻿@inject IJSRuntime JsRuntime
+﻿@using Spect.Net.Shell.Client.State
+@using Spect.Net.Shell.Shared.State.Actions
+@inject IJSRuntime JsRuntime
 
 <div class="title-bar">
     <div class="logo">
@@ -7,13 +9,16 @@
     <MenuBar TitleColor="white" />
     <AppCaption TitleColor="white" />
     <div class="title-buttons">
-        <div class="window-control">
+        <div class="window-control"
+             @onclick="() => RendererProcessStore.Dispatch(new MinimizeWindowAction())">
             <SvgIcon IconName="minimize" Width="10" Height="10" Fill="white" />
         </div>
-        <div class="window-control">
+        <div class="window-control"
+             @onclick="() => RendererProcessStore.Dispatch(new RestoreWindowAction())">
             <SvgIcon IconName="restore" Width="10" Height="10" Fill="white" />
         </div>
-        <div class="window-control" @onclick="OnMaximizeClick">
+        <div class="window-control" 
+             @onclick="() => RendererProcessStore.Dispatch(new MaximizeWindowAction())">
             <SvgIcon IconName="maximize" Width="10" Height="10" Fill="white" />
         </div>
         <div class="window-control close">
@@ -23,9 +28,4 @@
 </div>
 
 @code {
-
-    private Task OnMaximizeClick()
-    {
-        return JsRuntime.Maximize();
-    }
 }

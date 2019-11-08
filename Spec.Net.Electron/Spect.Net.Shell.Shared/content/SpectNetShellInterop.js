@@ -14,7 +14,7 @@ var SpectNetShellJsInterop = /** @class */ (function () {
         console.log("Listener set up for " + channel);
         electron_1.ipcRenderer.on(channel, function (_event, response) {
             console.log("Got it");
-            DotNet.invokeMethodAsync("Spect.Net.Shell.Client", "HandleMessage", response);
+            DotNet.invokeMethodAsync("Spect.Net.Shell.Client", "HandleMessage", channel, response);
         });
     };
     /**
@@ -33,12 +33,6 @@ var SpectNetShellJsInterop = /** @class */ (function () {
      */
     SpectNetShellJsInterop.prototype.isBrowserWindowMaximized = function () {
         return electron_1.remote.getCurrentWindow().isMaximized();
-    };
-    /**
-     * Maximizes the current browser window
-     */
-    SpectNetShellJsInterop.prototype.maximize = function () {
-        electron_1.remote.getCurrentWindow().maximize();
     };
     return SpectNetShellJsInterop;
 }());

@@ -1,6 +1,14 @@
-﻿<div class="sidebar">
+﻿@using Spect.Net.Shell.Client.Messaging
+@using Spect.Net.Shell.Shared.State.Actions
+
+<div class="sidebar" @onclick="OnClick">
 </div>
 
 @code {
+
+    private async Task OnClick()
+    {
+        await Messenger.SendAppAction(new MaximizeWindowAction());
+    }
 
 }

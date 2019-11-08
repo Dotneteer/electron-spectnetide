@@ -13,7 +13,7 @@
 @code {
     private string _themeStyle;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         base.OnInitialized();
 
@@ -24,7 +24,7 @@
         ThemingService.SetTheme("dark");
 
         // --- Initialize messaging
-        Messenger.Init(JsRuntime);
+        await Messenger.Init(JsRuntime);
     }
 
     private void OnThemeChanged(object sender, EventArgs e)

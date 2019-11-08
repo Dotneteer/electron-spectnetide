@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
-using Spect.Net.Shell.Server.Messaging;
 
 namespace Spect.Net.Shell.Server
 {
