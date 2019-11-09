@@ -46,7 +46,7 @@ namespace Spect.Net.Shell.Server.State
 
         public static AppState GetState() => s_Store.GetState();
 
-        public static event Action<AppState> StateChange
+        public static event Action<AppState,AppState> StateChange
         {
             add => s_Store.StateChanged += value;
             remove => s_Store.StateChanged -= value;
@@ -66,6 +66,7 @@ namespace Spect.Net.Shell.Server.State
         /// </returns>
         private static bool ForwardToRenderer<TState>(IStore<TState> store, IReducerAction action)
         {
+            action.IsLocal = true;
             var message = new AppActionMessage(action.GetType().AssemblyQualifiedName, action);
             Electron.IpcMain.Send(AppWindow.Instance.Window, 
                 ChannelNames.APP_STATE_FORWARD, 

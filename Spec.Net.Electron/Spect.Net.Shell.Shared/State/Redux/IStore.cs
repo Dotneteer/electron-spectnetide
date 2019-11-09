@@ -31,6 +31,6 @@ namespace Spect.Net.Shell.Shared.State.Redux
         /// <summary>
         /// This event is raised when the state of the store has been changed.
         /// </summary>
-        event Action<TState> StateChanged;
+        event Action<TState, TState> StateChanged;
     }
 }

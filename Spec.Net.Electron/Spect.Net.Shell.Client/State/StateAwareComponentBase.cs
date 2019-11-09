@@ -1,0 +1,63 @@
+﻿using System;
+using Microsoft.AspNetCore.Components;
+using Spect.Net.Shell.Shared.State;
+
+namespace Spect.Net.Shell.Client.State
+{
+    /// <summary>
+    /// This class implements a components that is aware of the current
+    /// application state.
+    /// </summary>
+    public abstract class StateAwareComponentBase: ComponentBase,
+        IDisposable
+    {
+        /// <summary>
+        /// Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.ComponentBase" />.
+        /// </summary>
+        protected StateAwareComponentBase()
+        {
+            RendererProcessStore.StateChange += HandleStateChanged;
+        }
+
+        /// <summary>
+        /// Gets the application state
+        /// </summary>
+        protected AppState AppState => RendererProcessStore.GetState();
+
+        /// <summary>
+        /// Override this method to handle application state changes.
+        /// </summary>
+        /// <param name="prevState">Previous application state</param>
+        /// <param name="newState">New application state</param>
+        protected virtual void OnStateChanged(AppState prevState, AppState newState)
+        {
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Check if state change should be signed. Override this method to check if
+        /// the partial state in which the component is interested has changed.
+        /// </summary>
+        /// <param name="prevState">Previous application state</param>
+        /// <param name="newState">New application state</param>
+        /// <returns>True, if state change should be signed; otherwise, false.</returns>
+        protected virtual bool HasChanged(AppState prevState, AppState newState) => prevState != newState;
+
+        private void HandleStateChanged(AppState prevState, AppState newState)
+        {
+            if (HasChanged(prevState, newState))
+            {
+                OnStateChanged(prevState, newState);
+            }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing,
+        /// or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            RendererProcessStore.StateChange -= HandleStateChanged;
+        }
+    }
+}

@@ -10,7 +10,7 @@ namespace Spect.Net.Shell.Client.State
     /// <summary>
     /// This class implements the state store of the renderer process.
     /// </summary>
-    public class RendererProcessStore
+    internal class RendererProcessStore
     {
         private static Store<AppState> s_Store;
         static RendererProcessStore()
@@ -25,7 +25,8 @@ namespace Spect.Net.Shell.Client.State
         {
             var initial = new AppState
             {
-                WindowState = WindowState.Normal
+                WindowState = WindowState.Normal,
+                HasFocus = true
             };
             s_Store = new Store<AppState>(
                 new List<Reducer<AppState>>
@@ -42,7 +43,7 @@ namespace Spect.Net.Shell.Client.State
 
         public static AppState GetState() => s_Store.GetState();
 
-        public static event Action<AppState> StateChange
+        public static event Action<AppState, AppState> StateChange
         {
             add => s_Store.StateChanged += value;
             remove => s_Store.StateChanged -= value;

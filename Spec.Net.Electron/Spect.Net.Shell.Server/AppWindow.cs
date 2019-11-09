@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
+using Spect.Net.Shell.Client.State;
 using Spect.Net.Shell.Server.Messaging;
 using Spect.Net.Shell.Server.State;
+using Spect.Net.Shell.Shared.State.Actions;
 
 namespace Spect.Net.Shell.Server
 {
@@ -28,6 +30,8 @@ namespace Spect.Net.Shell.Server
             });
             Instance = new AppWindow(browserWindow);
             browserWindow.OnReadyToShow += () => browserWindow.Show();
+            browserWindow.OnFocus += () => MainProcessStore.Dispatch(new AppGotFocusAction());
+            browserWindow.OnBlur += () => MainProcessStore.Dispatch(new AppLostFocusAction());
         }
 
         public SampleMessageProcessor SampleMessageProcessor { get; }

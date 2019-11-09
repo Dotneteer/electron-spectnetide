@@ -10,7 +10,6 @@ using Spect.Net.Shell.Shared.State.Redux;
 
 namespace Spect.Net.Shell.Client.Messaging
 {
-
     public static class Messenger
     {
         private static readonly Dictionary<int, TaskCompletionSource<JsonElement>> s_OngoingRequests
@@ -58,14 +57,14 @@ namespace Spect.Net.Shell.Client.Messaging
                     var msgType = Type.GetType(type);
                     if (msgType == null) return null;
 
-                    var payloadObj = jsonElement.GetProperty("payLoad").ToString();
-                    var payload = JsonSerializer.Deserialize(payloadObj, msgType);
+                    var payloadObj = jsonElement.GetProperty("payLoad");
+                    var payload = JsonSerializer.Deserialize(payloadObj.ToString(), msgType, new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                    });
                     if (payload is IReducerAction reducerAction)
                     {
-                        // --- Avoid infinite renderer-main message loop
-                        reducerAction.IsLocal = true;
                         RendererProcessStore.Dispatch(reducerAction);
-                        Console.WriteLine($"Renderer state updated: {JsonSerializer.Serialize(RendererProcessStore.GetState())}");
                     }
                     break;
             }

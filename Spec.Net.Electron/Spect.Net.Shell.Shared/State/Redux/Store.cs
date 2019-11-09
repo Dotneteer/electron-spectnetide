@@ -23,7 +23,7 @@ namespace Spect.Net.Shell.Shared.State.Redux
             _lastState = initialState;
         }
 
-        public event Action<TState> StateChanged;
+        public event Action<TState, TState> StateChanged;
 
         public TState Dispatch(IReducerAction action)
         {
@@ -51,12 +51,13 @@ namespace Spect.Net.Shell.Shared.State.Redux
                     }
                 }
             }
+
             var shouldFire = typeof(TState) is IEqualityComparer<TState>
-                ? (oldState as IEqualityComparer<TState>).Equals(_lastState as IEqualityComparer<TState>)
-                : (object)oldState == (object)_lastState;
+                ? !(oldState as IEqualityComparer<TState>).Equals(_lastState as IEqualityComparer<TState>)
+                : (object)oldState != (object)_lastState;
             if (shouldFire)
             {
-                StateChanged?.Invoke(_lastState);
+                StateChanged?.Invoke(oldState, _lastState);
             }
             return _lastState;
         }

@@ -34,13 +34,19 @@ namespace Spect.Net.Shell.Shared.State.Reducers
             {
                 case MaximizeWindowAction _:
                     s_Worker?.Invoke(WindowState.Maximized);
-                    return state.Assign(s => s.WindowState = WindowState.Maximized); ;
+                    return state.Assign(s => s.WindowState = WindowState.Maximized);
                 case MinimizeWindowAction _:
                     s_Worker?.Invoke(WindowState.Minimized);
-                    return state.Assign(s => s.WindowState = WindowState.Minimized); ;
+                    return state.Assign(s => s.WindowState = WindowState.Minimized);
                 case RestoreWindowAction _:
                     s_Worker?.Invoke(WindowState.Normal);
-                    return state.Assign(s => s.WindowState = WindowState.Normal); ;
+                    return state.Assign(s => s.WindowState = WindowState.Normal);
+                case AppGotFocusAction _:
+                    Console.WriteLine("App focus received.");
+                    return state.Assign(s => s.HasFocus = true);
+                case AppLostFocusAction _:
+                    Console.WriteLine("App focus lost.");
+                    return state.Assign(s => s.HasFocus = false);
                 default:
                     return state;
             }

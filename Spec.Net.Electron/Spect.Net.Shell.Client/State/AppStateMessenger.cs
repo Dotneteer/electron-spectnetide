@@ -10,7 +10,7 @@ namespace Spect.Net.Shell.Client.State
     /// This class is responsible for sending app state messages from the renderer
     /// process to the main process.
     /// </summary>
-    public class AppStateMessenger : MessengerServiceBase
+    internal class AppStateMessenger : MessengerServiceBase
     {
         /// <summary>
         /// Instantiates a sample messenger

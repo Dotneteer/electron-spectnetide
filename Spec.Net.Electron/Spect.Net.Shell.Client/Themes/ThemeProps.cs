@@ -16,6 +16,12 @@
         public int IconDefaultSize { get; set; }
         public string IconDefaultFill { get; set; }
 
+        public string TitleBarActiveBackgroundColor { get; set; }
+        public string TitleBarInactiveBackgroundColor { get; set; }
+        public string TitleBarActiveColor { get; set; }
+        public string TitleBarInactiveColor { get; set; }
+
         public string MenuActiveBackgroundColor { get; set; }
+
     }
 }
