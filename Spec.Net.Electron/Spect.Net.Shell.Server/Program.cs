@@ -17,6 +17,8 @@ namespace Spect.Net.Shell.Server
                 .UseConfiguration(new ConfigurationBuilder()
                     .AddCommandLine(args)
                     .Build())
+                // --- Allow Electron.NET
+                // --- Always use it before UseStartup
                 .UseElectron(args)
                 .UseStartup<Startup>()
                 .Build();

@@ -3,8 +3,6 @@ using Spect.Net.Shell.Shared.State.Reducers;
 using Spect.Net.Shell.Shared.State.Redux;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
 using ElectronNET.API;
 using Spect.Net.Shell.Client.State;
 using Spect.Net.Shell.Shared.Messaging;
@@ -12,11 +10,21 @@ using Spect.Net.Shell.Shared.Messaging;
 namespace Spect.Net.Shell.Server.State
 {
     /// <summary>
-    /// This class implements the state store of the main process.
+    /// This static class implements the state store of the main process.
     /// </summary>
+    /// <remarks>
+    /// This object holds the single truth about application state. Firsts,
+    /// (except local actions) this store displatches the actions, and then
+    /// actions are conveyed to the store in the renderer process.
+    /// </remarks>
     public static class MainProcessStore
     {
         private static Store<AppState> s_Store;
+
+        /// <summary>
+        /// Instantiates the singleton instance of the class using the
+        /// Reset method.
+        /// </summary>
         static MainProcessStore()
         {
             Reset();
@@ -27,25 +35,41 @@ namespace Spect.Net.Shell.Server.State
         /// </summary>
         public static void Reset()
         {
-            var initial = new AppState
-            {
-                WindowState = WindowState.Normal
-            };
             s_Store = new Store<AppState>(
+                // --- Action reducers
                 new List<Reducer<AppState>>
                 {
                     WindowStateReducer.Create(WindowStateWorker.Transit)
                 },
-                initial,
+
+                AppState.InitialState,
+
+                // --- This middleware forwards actions to the renderer
                 ForwardToRenderer
             );
         }
 
+        /// <summary>
+        /// Retrieves the current state of the store.
+        /// </summary>
+        public static AppState GetState() => s_Store.GetState();
+
+        /// <summary>
+        /// Dispatches the specified actions, and sets
+        /// the new state of the store accordingly.
+        /// </summary>
+        /// <param name="action">Action to dispatch</param>
+        /// <returns>
+        /// The new state of the store.
+        /// </returns>
         public static AppState Dispatch(IReducerAction action)
             => s_Store.Dispatch(action);
 
-        public static AppState GetState() => s_Store.GetState();
-
+        /// <summary>
+        /// This event is raised when the store's state has changed.
+        /// The first argument of the event method is the previous app state;
+        /// the second argument is the new state.
+        /// </summary>
         public static event Action<AppState,AppState> StateChange
         {
             add => s_Store.StateChanged += value;
@@ -69,9 +93,8 @@ namespace Spect.Net.Shell.Server.State
             action.IsLocal = true;
             var message = new AppActionMessage(action.GetType().AssemblyQualifiedName, action);
             Electron.IpcMain.Send(AppWindow.Instance.Window, 
-                ChannelNames.APP_STATE_FORWARD, 
+                ChannelNames.APP_STATE_TO_RENDERER, 
                 message);
-            File.WriteAllText("C:\\Temp\\appmessages.txt", $"Message forwarded: {JsonSerializer.Serialize(message)}");
             return true;
         }
     }

@@ -10,7 +10,7 @@ namespace Spect.Net.Shell.Client.Messaging
     /// the renderer and main processes.
     /// </summary>
     /// <remarks>
-    /// You can {@link post} fire-and-forget type messages, or {@link send} messages where you
+    /// You can post fire-and-forget type messages, or send messages where you
     /// expect a correlated response.
     ///
     /// You need to instantiate this class in the renderer process, as it can initiate communication
@@ -18,7 +18,7 @@ namespace Spect.Net.Shell.Client.Messaging
     ///
     /// You can use this class as a base class to implement your messages.
     /// </remarks>
-    public class MessengerServiceBase
+    public abstract class MessengerBase
     {
         /// <summary>
         /// Access the JS Interop object
@@ -33,33 +33,40 @@ namespace Spect.Net.Shell.Client.Messaging
         public string Channel { get; }
 
         /// <summary>
+        /// Initializes the channel
+        /// </summary>
+        public Task InitAsync()
+        {
+            return EnsureChannelAsync();
+        }
+
+        /// <summary>
         /// Instantiates a messenger that communicates through the specified channel
         /// </summary>
         /// <param name="jsRuntime">JS Interop object</param>
         /// <param name="channel">Channel name</param>
-        protected MessengerServiceBase(IJSRuntime jsRuntime, string channel)
+        protected MessengerBase(IJSRuntime jsRuntime, string channel)
         {
             JsRuntime = jsRuntime;
             Channel = channel;
             _channelInitialized = false;
         }
 
-        public async Task Post(MessageBase messageBase)
+        /// <summary>
+        /// Sends a message through this objects channel, and 
+        /// </summary>
+        /// <param name="ipcMessage"></param>
+        /// <returns></returns>
+        public async Task SendAsync(IpcMessage ipcMessage)
         {
-            await EnsureChannel();
-            await JsRuntime.SendMessage(Channel, messageBase);
-        }
-
-        public async Task Send(MessageBase messageBase)
-        {
-            await EnsureChannel();
-            await JsRuntime.SendMessage(Channel, messageBase);
+            await EnsureChannelAsync();
+            await JsRuntime.SendMessage(Channel, ipcMessage);
         }
 
         /// <summary>
         /// Ensures that the communication channel is established
         /// </summary>
-        private async Task EnsureChannel()
+        private async Task EnsureChannelAsync()
         {
             if (!_channelInitialized)
             {

@@ -61,7 +61,7 @@
     /// <returns>True, if state change should be signed; otherwise, false.</returns>
     protected override bool HasChanged(AppState prevState, AppState newState)
     {
-        return prevState.HasFocus != newState.HasFocus 
+        return prevState.HasFocus != newState.HasFocus
                || prevState.WindowState != newState.WindowState;
     }
 
@@ -73,9 +73,9 @@
 
     private void CalculateColors(bool hasFocus)
     {
-        _titleColor = ThemingService.GetProperty(s => 
+        _titleColor = ThemingService.GetProperty(s =>
             hasFocus ? s.TitleBarActiveColor : s.TitleBarInactiveColor);
-        _backgroundColor = ThemingService.GetProperty(s => 
+        _backgroundColor = ThemingService.GetProperty(s =>
             hasFocus ? s.TitleBarActiveBackgroundColor : s.TitleBarInactiveBackgroundColor);
     }
 

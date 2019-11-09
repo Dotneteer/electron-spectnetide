@@ -3,8 +3,8 @@
 namespace Spect.Net.Shell.Shared.State.Redux
 {
     /// <summary>
-    /// Represents a store that encapsulates a state tree and is used to dispatch actions to update the
-    /// state tree.
+    /// Represents a store that encapsulates a state tree and is used to dispatch
+    /// actions to update the state tree.
     /// </summary>
     /// <typeparam name="TState">
     /// The state tree type.
@@ -12,20 +12,18 @@ namespace Spect.Net.Shell.Shared.State.Redux
     public interface IStore<out TState>
     {
         /// <summary>
-        /// Dispatches an action to the store.
+        /// Dispatches the specified actions, and sets
+        /// the new state of the store accordingly.
         /// </summary>
-        /// <param name="action">The action to dispatch.</param>
+        /// <param name="action">Action to dispatch</param>
         /// <returns>
-        /// The new state of the store after dispatch
+        /// The new state of the store.
         /// </returns>
         TState Dispatch(IReducerAction action);
 
         /// <summary>
-        /// Gets the current state tree.
+        /// Retrieves the current state of the store.
         /// </summary>
-        /// <returns>
-        /// The current state tree.
-        /// </returns>
         TState GetState();
 
         /// <summary>

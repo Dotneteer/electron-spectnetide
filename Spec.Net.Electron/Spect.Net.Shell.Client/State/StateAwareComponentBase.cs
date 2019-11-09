@@ -20,7 +20,7 @@ namespace Spect.Net.Shell.Client.State
         }
 
         /// <summary>
-        /// Gets the application state
+        /// Gets the application state.
         /// </summary>
         protected AppState AppState => RendererProcessStore.GetState();
 
@@ -43,6 +43,9 @@ namespace Spect.Net.Shell.Client.State
         /// <returns>True, if state change should be signed; otherwise, false.</returns>
         protected virtual bool HasChanged(AppState prevState, AppState newState) => prevState != newState;
 
+        /// <summary>
+        /// This method is assigned to the StateChanged event of the RendererStore
+        /// </summary>
         private void HandleStateChanged(AppState prevState, AppState newState)
         {
             if (HasChanged(prevState, newState))

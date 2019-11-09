@@ -5,7 +5,14 @@
     /// </summary>
     public class ChannelNames
     {
-        public const string APP_STATE_MESSAGE = "app-state-message";
-        public const string APP_STATE_FORWARD = "app-state-forward";
+        /// <summary>
+        /// Convers application state messages from renderer to main
+        /// </summary>
+        public const string APP_STATE_TO_MAIN = "app-state-to-main";
+
+        /// <summary>
+        /// Convers application state messages from main to renderer
+        /// </summary>
+        public const string APP_STATE_TO_RENDERER = "app-state-to-renderer";
     }
 }

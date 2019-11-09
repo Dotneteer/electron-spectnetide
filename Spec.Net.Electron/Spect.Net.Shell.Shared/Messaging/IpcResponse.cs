@@ -1,9 +1,10 @@
 ﻿namespace Spect.Net.Shell.Shared.Messaging
 {
     /// <summary>
-    /// This class defines a base class for a response that can convey exception
+    /// This class defines response message structure that can convey an exception
+    /// code and description.
     /// </summary>
-    public abstract class ResponseBase : MessageBase
+    public class IpcResponse : IpcMessage
     {
         /// <summary>
         /// Optional exception code

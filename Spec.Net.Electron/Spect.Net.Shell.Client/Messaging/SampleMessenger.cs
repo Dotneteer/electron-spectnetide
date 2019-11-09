@@ -2,7 +2,10 @@
 
 namespace Spect.Net.Shell.Client.Messaging
 {
-    public class SampleMessenger : MessengerServiceBase
+    /// <summary>
+    /// This class implements a sample message
+    /// </summary>
+    public class SampleMessenger : MessengerBase
     {
         /// <summary>
         /// Instantiates a sample messenger

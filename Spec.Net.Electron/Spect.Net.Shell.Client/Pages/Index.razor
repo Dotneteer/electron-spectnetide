@@ -24,7 +24,7 @@
         ThemingService.SetTheme("dark");
 
         // --- Initialize messaging
-        await Messenger.Init(JsRuntime);
+        await Messenger.InitAsync(JsRuntime);
     }
 
     private void OnThemeChanged(object sender, EventArgs e)

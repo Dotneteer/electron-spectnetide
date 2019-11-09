@@ -8,11 +8,22 @@ using Spect.Net.Shell.Shared.State.Redux;
 namespace Spect.Net.Shell.Client.State
 {
     /// <summary>
-    /// This class implements the state store of the renderer process.
+    /// This static class implements the state store of the renderer process.
     /// </summary>
+    /// <remarks>
+    /// This object holds a replica of the application state stored in the main
+    /// process. Local actions are dispatched only in this store. Nonetheless, other
+    /// actions are send to the main process, and after the store dispatch there,
+    /// they are sent back to this store.
+    /// </remarks>
     internal class RendererProcessStore
     {
         private static Store<AppState> s_Store;
+
+        /// <summary>
+        /// Instantiates the singleton instance of the class using the
+        /// Reset method.
+        /// </summary>
         static RendererProcessStore()
         {
             Reset();
@@ -23,26 +34,41 @@ namespace Spect.Net.Shell.Client.State
         /// </summary>
         public static void Reset()
         {
-            var initial = new AppState
-            {
-                WindowState = WindowState.Normal,
-                HasFocus = true
-            };
             s_Store = new Store<AppState>(
+                // --- Action reducers
                 new List<Reducer<AppState>>
                 {
                     WindowStateReducer.Create()
                 },
-                initial,
+
+                AppState.InitialState,
+
+                // --- Forwards non-local messages to the main process
                 ForwardToMain
             );
         }
 
+        /// <summary>
+        /// Retrieves the current state of the store.
+        /// </summary>
+        public static AppState GetState() => s_Store.GetState();
+
+        /// <summary>
+        /// Dispatches the specified actions, and sets
+        /// the new state of the store accordingly.
+        /// </summary>
+        /// <param name="action">Action to dispatch</param>
+        /// <returns>
+        /// The new state of the store.
+        /// </returns>
         public static AppState Dispatch(IReducerAction action)
             => s_Store.Dispatch(action);
 
-        public static AppState GetState() => s_Store.GetState();
-
+        /// <summary>
+        /// This event is raised when the store's state has changed.
+        /// The first argument of the event method is the previous app state;
+        /// the second argument is the new state.
+        /// </summary>
         public static event Action<AppState, AppState> StateChange
         {
             add => s_Store.StateChanged += value;

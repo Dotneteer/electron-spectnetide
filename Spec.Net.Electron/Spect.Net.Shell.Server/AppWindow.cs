@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
-using Spect.Net.Shell.Client.State;
 using Spect.Net.Shell.Server.Messaging;
 using Spect.Net.Shell.Server.State;
 using Spect.Net.Shell.Shared.State.Actions;
+using Spect.Net.Shell.Shared.State.Redux;
 
 namespace Spect.Net.Shell.Server
 {
@@ -18,6 +18,10 @@ namespace Spect.Net.Shell.Server
         /// </summary>
         public static AppWindow Instance { get; private set; }
 
+        /// <summary>
+        /// Factory method to create the singleton instance
+        /// </summary>
+        /// <returns></returns>
         public static async Task Create()
         {
             if (Instance != null) return;
@@ -32,10 +36,32 @@ namespace Spect.Net.Shell.Server
             browserWindow.OnReadyToShow += () => browserWindow.Show();
             browserWindow.OnFocus += () => MainProcessStore.Dispatch(new AppGotFocusAction());
             browserWindow.OnBlur += () => MainProcessStore.Dispatch(new AppLostFocusAction());
+            browserWindow.OnRestore += async () =>
+            {
+                var action = (await browserWindow.IsMaximizedAsync())
+                    ? new MaximizeWindowAction() as IReducerAction
+                    : new RestoreWindowAction();
+                action.IsLocal = true;
+                MainProcessStore.Dispatch(action);
+            };
+            browserWindow.OnMaximize += () => MainProcessStore.Dispatch(new MaximizeWindowAction
+            {
+                IsLocal = true
+            });
+            browserWindow.OnMinimize += () => MainProcessStore.Dispatch(new MinimizeWindowAction
+            {
+                IsLocal = true
+            });
         }
 
+        /// <summary>
+        /// Processor handling sample messages
+        /// </summary>
         public SampleMessageProcessor SampleMessageProcessor { get; }
 
+        /// <summary>
+        /// Processor handling application state messages
+        /// </summary>
         public AppActionMessageProcessor AppActionMessageProcessor { get; }
 
         /// <summary>
@@ -43,6 +69,11 @@ namespace Spect.Net.Shell.Server
         /// </summary>
         public BrowserWindow Window { get; }
 
+        /// <summary>
+        /// The private constructor that initializes the singleton
+        /// class instance
+        /// </summary>
+        /// <param name="window">BrowserWindow instance wrapped in</param>
         private AppWindow(BrowserWindow window)
         {
             Window = window;

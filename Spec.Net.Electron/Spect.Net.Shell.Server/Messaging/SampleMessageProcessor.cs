@@ -5,6 +5,9 @@ using Spect.Net.Shell.Shared.Messaging;
 
 namespace Spect.Net.Shell.Server.Messaging
 {
+    /// <summary>
+    /// A sample message processor
+    /// </summary>
     public class SampleMessageProcessor: MessageProcessorBase
     {
         /// <summary>
@@ -22,7 +25,7 @@ namespace Spect.Net.Shell.Server.Messaging
         /// <param name="correlationId">Correlation ID</param>
         /// <param name="message">The JObject instance that represents the message</param>
         /// <returns></returns>
-        protected override MessageBase ProcessMessage(string type, int? correlationId, JObject message)
+        protected override IpcMessage ProcessMessage(string type, int? correlationId, JObject message)
         {
             switch (type)
             {

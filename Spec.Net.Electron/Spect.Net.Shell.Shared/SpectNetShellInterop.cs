@@ -21,10 +21,10 @@ namespace Spect.Net.Shell.Shared
         /// </summary>
         /// <param name="jsRuntime">JS runtime object</param>
         /// <param name="channel">Channel name</param>
-        /// <param name="messageBase">Message to send</param>
-        public static async Task SendMessage(this IJSRuntime jsRuntime, string channel, MessageBase messageBase)
+        /// <param name="message">Message to send</param>
+        public static async Task SendMessage(this IJSRuntime jsRuntime, string channel, IpcMessage message)
         {
-            await jsRuntime.InvokeAsync<object>("SpectNetShell.sendMessage", channel, messageBase);
+            await jsRuntime.InvokeAsync<object>("SpectNetShell.sendMessage", channel, message);
         }
 
         /// <summary>

@@ -34,7 +34,6 @@ namespace Spect.Net.Shell.Server
 
             app.UseStaticFiles();
             app.UseClientSideBlazorFiles<Client.Startup>();
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -43,6 +42,7 @@ namespace Spect.Net.Shell.Server
                 endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
             });
 
+            // --- Create the Electon shell's main application window
             await AppWindow.Create();
         }
     }
