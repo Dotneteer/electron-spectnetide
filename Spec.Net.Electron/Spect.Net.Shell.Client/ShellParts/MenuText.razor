@@ -1,4 +1,4 @@
-﻿@using System.Text.RegularExpressions
+﻿@using Spect.Net.Shell.Shared.Helpers
 
 @if (!string.IsNullOrEmpty(_preText))
 {
@@ -11,7 +11,7 @@
         @_accessKeyText
     </span>
 }
-@if (string.IsNullOrEmpty(_postText))
+@if (!string.IsNullOrEmpty(_postText))
 {
     <span aria-hidden="true">@_postText</span>
 }
@@ -44,26 +44,6 @@
 
     private void SplitText()
     {
-        var m = Regex.Match(Text, "^(.*?)?(?:&([^&]))(.*)?$");
-        if (m.Success)
-        {
-            _preText = _title;
-            return;
-        }
-
-        if (m.Captures[1].Value != null)
-        {
-            _preText = Unescape(m.Captures[1].Value);
-        }
-
-        _accessKeyText = m.Captures[2].Value;
-
-        if (m.Captures[3].Value != null)
-        {
-            _postText = Unescape(m.Captures[3].Value);
-        }
+        (_preText, _accessKeyText, _postText) = _title.SplitMenuText();
     }
-
-    private string Unescape(string accessText)
-        => accessText.Replace("&&", "&");
 }

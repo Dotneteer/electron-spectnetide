@@ -61,7 +61,7 @@ html, body {
     justify-content: center;
     width: 30px;
     height: 30px;
-    margin: 0px 8px; }
+    margin: 0px 4px; }
   .title-bar .title-buttons {
     display: flex;
     flex-grow: 0;
@@ -138,6 +138,19 @@ html, body {
   flex-grow: 0;
   height: 100%;
   -webkit-app-region: no-drag; }
+  .menu-bar:focus {
+    outline: none; }
 
 .access-key.highlight {
   text-decoration: underline; }
+
+.menu-button {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid transparent; }
+  .menu-button.pointed {
+    background-color: var(--menu-active-background-color); }
+  .menu-button .show-access-key {
+    text-decoration: underline; }

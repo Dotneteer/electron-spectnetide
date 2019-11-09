@@ -42,10 +42,8 @@ namespace Spect.Net.Shell.Shared.State.Reducers
                     s_Worker?.Invoke(WindowState.Normal);
                     return state.Assign(s => s.WindowState = WindowState.Normal);
                 case AppGotFocusAction _:
-                    Console.WriteLine("App focus received.");
                     return state.Assign(s => s.HasFocus = true);
                 case AppLostFocusAction _:
-                    Console.WriteLine("App focus lost.");
                     return state.Assign(s => s.HasFocus = false);
                 default:
                     return state;

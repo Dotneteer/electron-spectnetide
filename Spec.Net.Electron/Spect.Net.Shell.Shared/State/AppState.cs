@@ -1,4 +1,7 @@
-﻿namespace Spect.Net.Shell.Shared.State
+﻿using System.Collections.Generic;
+using Spect.Net.Shell.Shared.Menus;
+
+namespace Spect.Net.Shell.Shared.State
 {
     /// <summary>
     /// This class represents the state of the application.
@@ -16,12 +19,35 @@
         public bool HasFocus { get; set; }
 
         /// <summary>
+        /// The current menu to display
+        /// </summary>
+        public Menu Menu { get; set; }
+
+        /// <summary>
         /// The intial app state to use when intializing the stores
         /// </summary>
         public static AppState InitialState = new AppState
         {
             WindowState = WindowState.Normal,
             HasFocus = true,
+            Menu = new Menu()
+            {
+                Items = new List<IMenuItem>
+                {
+                    new MenuItem("file")
+                    {
+                        Label = "&File"
+                    },
+                    new MenuItem("edit")
+                    {
+                        Label = "&Edit"
+                    },
+                    new MenuItem("view")
+                    {
+                        Label = "&View"
+                    }
+                }
+            }
         };
     }
 }

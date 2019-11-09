@@ -11,7 +11,7 @@
     <div class="logo">
         <img src="assets/images/spectnet-logo.png" />
     </div>
-    <MenuBar TitleColor="@_titleColor" />
+    <MenuBar/>
     <AppCaption/>
     <div class="title-buttons">
         <div class="window-control"
@@ -40,8 +40,8 @@
 
 @code {
 
-    private string _titleColor = "white";
-    private string _backgroundColor = "black";
+    private string _titleColor;
+    private string _backgroundColor;
 
     /// <summary>
     /// Method invoked when the component is ready to start, having received its
