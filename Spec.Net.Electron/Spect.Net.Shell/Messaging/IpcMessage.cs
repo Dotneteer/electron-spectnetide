@@ -1,4 +1,4 @@
-﻿namespace Spect.Net.Shell.Shared.Messaging
+﻿namespace Spect.Net.Shell.Messaging
 {
     /// <summary>
     /// Represents a message that can be send between the main and

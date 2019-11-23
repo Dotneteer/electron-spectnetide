@@ -1,10 +1,9 @@
-using System.Threading.Tasks;
-using ElectronNET.API;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Spect.Net.Shell.Themes;
 
 namespace Spect.Net.Shell
 {
@@ -23,10 +22,11 @@ namespace Spect.Net.Shell
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddSingleton<IThemingService<ThemeProps>, ThemingService<ThemeProps>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -39,9 +39,8 @@ namespace Spect.Net.Shell
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -50,8 +49,8 @@ namespace Spect.Net.Shell
                 endpoints.MapFallbackToPage("/_Host");
             });
 
-            Task.Run(async () => await Electron.WindowManager.CreateWindowAsync());
-
+            // --- Create the Electon shell's main application window
+            await AppWindow.Create();
         }
     }
 }

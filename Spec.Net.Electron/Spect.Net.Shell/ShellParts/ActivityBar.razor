@@ -1,0 +1,14 @@
+﻿@using Spect.Net.Shell.Messaging
+@inject IJSRuntime JsRuntime
+
+<div class="activity-bar" @onclick="OnClick">
+</div>
+
+@code {
+
+    private async Task OnClick()
+    {
+        var response = await Messenger.Sample("Hey!");
+        Console.WriteLine($"Response: '{response.Argument}', '{response.CorrelationId}', '{response.MessageType}'");
+    }
+}

@@ -1,8 +1,8 @@
-﻿using Microsoft.JSInterop;
-using Spect.Net.Shell.Shared.Messaging;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.JSInterop;
+using Spect.Net.Shell.Messaging;
 
-namespace Spect.Net.Shell.Shared
+namespace Spect.Net.Shell
 {
     public static class SpectNetShellInterop
     {

@@ -1,6 +1,4 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shouldly;
-using Spect.Net.Shell.Shared.Helpers;
 
 namespace Spect.Net.Shell.Test
 {

@@ -3,14 +3,33 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ElectronNET.API" Version="5.30.1" />
+    <Content Remove="wwwroot\scripts\Messaging.ts" />
+    <Content Remove="wwwroot\scripts\SpectNetShellInterop.js" />
+    <Content Remove="wwwroot\scripts\SpectNetShellInterop.ts" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spect.Net.Shell.Shared\Spect.Net.Shell.Shared.csproj" />
+    <EmbeddedResource Include="wwwroot\scripts\SpectNetShellInterop.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <LogicalName>blazor:js:%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ElectronNET.API" Version="5.30.1" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.7.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Content Update="electron.manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\scripts\Messaging.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="wwwroot\scripts\SpectNetShellInterop.ts" />
   </ItemGroup>
 </Project>

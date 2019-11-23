@@ -1,0 +1,20 @@
+﻿@import "reset.scss";
+@import "loading.scss";
+@import "app-container.scss";
+
+// Controls
+@import "../Controls/svg-icon.scss";
+
+// Shell parts
+@import "../ShellParts/title-bar.scss";
+@import "../ShellParts/main-panel.scss";
+@import "../ShellParts/activity-bar.scss";
+@import "../ShellParts/sidebar.scss";
+@import "../ShellParts/main-canvas.scss";
+@import "../ShellParts/status-bar.scss";
+
+// Title bar elements
+@import "../ShellParts/app-caption.scss";
+@import "../ShellParts/menu-bar.scss";
+@import "../ShellParts/menu-text.scss";
+@import "../ShellParts/menu-button.scss";

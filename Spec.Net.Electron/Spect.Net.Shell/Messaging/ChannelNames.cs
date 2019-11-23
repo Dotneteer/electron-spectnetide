@@ -1,4 +1,4 @@
-﻿namespace Spect.Net.Shell.Shared.Messaging
+﻿namespace Spect.Net.Shell.Messaging
 {
     /// <summary>
     /// This class defines channel names used in the application

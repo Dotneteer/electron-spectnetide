@@ -1,0 +1,10 @@
+﻿.menu-bar {
+    display: flex;
+    flex-grow: 0;
+    height: 100%;
+    -webkit-app-region: no-drag;
+
+    &:focus {
+        outline: none;
+    }
+}

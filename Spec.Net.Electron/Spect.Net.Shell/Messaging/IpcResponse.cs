@@ -1,4 +1,4 @@
-﻿namespace Spect.Net.Shell.Shared.Messaging
+﻿namespace Spect.Net.Shell.Messaging
 {
     /// <summary>
     /// This class defines response message structure that can convey an exception

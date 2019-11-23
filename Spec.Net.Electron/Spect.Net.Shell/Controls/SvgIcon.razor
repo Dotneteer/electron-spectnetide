@@ -1,0 +1,65 @@
+﻿@inject IThemingService<ThemeProps> ThemingService
+
+<svg class="svg-icon"
+     xmlns="http://www.w3.org/2000/svg"
+     style="@_thisStyle"
+     viewBox="@_viewBox">
+    <path d="@_iconPath" />
+</svg>
+
+@code {
+    private string _thisStyle;
+    private string _viewBox;
+    private string _iconPath;
+
+    private string _iconName;
+    private IconInfo _iconInfo;
+
+    [Parameter]
+    public string IconName
+    {
+        get => _iconName;
+        set
+        {
+            _iconName = value;
+            _iconInfo = ThemingService.GetIcon(value);
+            _iconPath = _iconInfo.Path;
+            _viewBox = $"0 0 {this._iconInfo.Width} {this._iconInfo.Height}";
+        }
+    }
+
+    [Parameter]
+    public int? Width { get; set; }
+
+    [Parameter]
+    public int? Height { get; set; }
+
+    [Parameter]
+    public string Fill { get; set; }
+
+    [Parameter]
+    public int? Rotate { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var builder = new StyleBuilder();
+        builder.AddStyle("width", Width.HasValue
+            ? $"{Width}px"
+            : ThemingService.GetProperty(s => $"{s.IconDefaultSize}px"));
+        builder.AddStyle("height", Height.HasValue
+            ? $"{Height}px"
+            : ThemingService.GetProperty(s => $"{s.IconDefaultSize}px"));
+        var fill = Fill;
+        if (fill == null)
+        {
+            fill = ThemingService.GetProperty(s => s.IconDefaultFill);
+        }
+        else if (Fill.StartsWith("--"))
+        {
+            fill = ThemingService.GetProperty<string>(Fill.Substring(2));
+        }
+        builder.AddStyle("fill", fill);
+        builder.AddStyle("transform", $"rotate({Rotate ?? 0}deg)");
+        _thisStyle = builder.ToString();
+    }
+}
