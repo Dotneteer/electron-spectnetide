@@ -4,7 +4,7 @@
 @inject IThemingService<ThemeProps> ThemingService
 
 <div class="menu-bar" tabindex="0">
-    @foreach (var menuItem in AppState.Menu.Items)
+    @foreach (var menuItem in AppState.MenuState.Menu.Items)
     {
         <MenuButton Item="@menuItem" Highlight="true" TitleColor="@_titleColor" />
     }
@@ -19,7 +19,7 @@
     protected override void OnStateChanged(AppState prevState, AppState newState)
     {
         CalculateColors(newState.HasFocus);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void CalculateColors(bool hasFocus)
