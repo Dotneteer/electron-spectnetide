@@ -1,13 +1,5 @@
-﻿@using MaximizeWindowAction = Spect.Net.Shell.State.Actions.MaximizeWindowAction
-
-<div class="sidebar" @onclick="OnClick">
+﻿<div class="sidebar">
 </div>
 
 @code {
-
-    private async Task OnClick()
-    {
-        await Messenger.SendAppAction(new MaximizeWindowAction());
-    }
-
 }

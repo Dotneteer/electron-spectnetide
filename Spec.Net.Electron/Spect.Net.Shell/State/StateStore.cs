@@ -1,29 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using ElectronNET.API;
-using Spect.Net.Shell.Messaging;
 using Spect.Net.Shell.State.Reducers;
 using Spect.Net.Shell.State.Redux;
 
 namespace Spect.Net.Shell.State
 {
     /// <summary>
-    /// This static class implements the state store of the main process.
+    /// This static class implements the state store of the app.
     /// </summary>
     /// <remarks>
-    /// This object holds the single truth about application state. Firsts,
-    /// (except local actions) this store displatches the actions, and then
-    /// actions are conveyed to the store in the renderer process.
+    /// This object holds the single truth about application state.
     /// </remarks>
-    public static class MainProcessStore
+    public static class StateStore
     {
-        private static Redux.Store<AppState> s_Store;
+        private static Store<AppState> s_Store;
 
         /// <summary>
         /// Instantiates the singleton instance of the class using the
         /// Reset method.
         /// </summary>
-        static MainProcessStore()
+        static StateStore()
         {
             Reset();
         }
@@ -33,17 +29,14 @@ namespace Spect.Net.Shell.State
         /// </summary>
         public static void Reset()
         {
-            s_Store = new Redux.Store<AppState>(
+            s_Store = new Store<AppState>(
                 // --- Action reducers
-                new List<Redux.Reducer<AppState>>
+                new List<Reducer<AppState>>
                 {
                     WindowStateReducer.Create(WindowStateWorker.Transit)
                 },
 
-                AppState.InitialState,
-
-                // --- This middleware forwards actions to the renderer
-                ForwardToRenderer
+                AppState.InitialState
             );
         }
 
@@ -72,28 +65,6 @@ namespace Spect.Net.Shell.State
         {
             add => s_Store.StateChanged += value;
             remove => s_Store.StateChanged -= value;
-        }
-
-        /// <summary>
-        /// This method implements the middleware that forwards the main process store
-        /// state change action to the store of the renderer process
-        /// </summary>
-        /// <param name="store">
-        /// The IStore this middleware is to be used on.
-        /// </param>
-        /// <param name="action">Action to be handled</param>
-        /// <returns>
-        /// A boolean that represents if the middleware chain should be processed (true),
-        /// or abandoned (false)
-        /// </returns>
-        private static bool ForwardToRenderer<TState>(Redux.IStore<TState> store, IReducerAction action)
-        {
-            action.IsLocal = true;
-            var message = new AppActionMessage(action.GetType().AssemblyQualifiedName, action);
-            Electron.IpcMain.Send(AppWindow.Instance.Window, 
-                ChannelNames.APP_STATE_TO_RENDERER, 
-                message);
-            return true;
         }
     }
 }

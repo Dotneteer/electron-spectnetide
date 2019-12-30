@@ -1,6 +1,6 @@
-﻿using System;
-using Spect.Net.Shell.State.Actions;
+﻿using Spect.Net.Shell.State.Actions;
 using Spect.Net.Shell.State.Redux;
+using System;
 
 namespace Spect.Net.Shell.State.Reducers
 {
@@ -33,18 +33,33 @@ namespace Spect.Net.Shell.State.Reducers
             switch (action)
             {
                 case MaximizeWindowAction _:
-                    s_Worker?.Invoke(WindowState.Maximized);
-                    return state.Assign(s => s.WindowState = WindowState.Maximized);
+                    if (state.WindowState != WindowState.Maximized)
+                    {
+                        s_Worker?.Invoke(WindowState.Maximized);
+                        return state.Assign(s => s.WindowState = WindowState.Maximized);
+                    }
+                    return state;
                 case MinimizeWindowAction _:
-                    s_Worker?.Invoke(WindowState.Minimized);
-                    return state.Assign(s => s.WindowState = WindowState.Minimized);
+                    if (state.WindowState != WindowState.Minimized)
+                    {
+                        s_Worker?.Invoke(WindowState.Minimized);
+                        return state.Assign(s => s.WindowState = WindowState.Minimized);
+                    }
+                    return state;
                 case RestoreWindowAction _:
-                    s_Worker?.Invoke(WindowState.Normal);
-                    return state.Assign(s => s.WindowState = WindowState.Normal);
+                    if (state.WindowState != WindowState.Normal)
+                    {
+                        s_Worker?.Invoke(WindowState.Normal);
+                        return state.Assign(s => s.WindowState = WindowState.Normal);
+                    }
+                    return state;
                 case AppGotFocusAction _:
                     return state.Assign(s => s.HasFocus = true);
                 case AppLostFocusAction _:
                     return state.Assign(s => s.HasFocus = false);
+                case CloseWindowAction _:
+                    s_Worker?.Invoke(WindowState.ToClose);
+                    return state.Assign(s => s.WindowState = WindowState.ToClose);
                 default:
                     return state;
             }

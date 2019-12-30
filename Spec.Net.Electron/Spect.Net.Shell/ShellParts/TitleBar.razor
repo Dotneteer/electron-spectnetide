@@ -11,24 +11,25 @@
     <AppCaption />
     <div class="title-buttons">
         <div class="window-control"
-             @onclick="() => RendererProcessStore.Dispatch(new MinimizeWindowAction())">
+             @onclick="() => StateStore.Dispatch(new MinimizeWindowAction())">
             <SvgIcon IconName="minimize" Width="10" Height="10" Fill="white" />
         </div>
         @if (AppState.WindowState == WindowState.Maximized)
         {
             <div class="window-control"
-                 @onclick="() => RendererProcessStore.Dispatch(new RestoreWindowAction())">
+                 @onclick="() => StateStore.Dispatch(new RestoreWindowAction())">
                 <SvgIcon IconName="restore" Width="10" Height="10" Fill="white" />
             </div>
         }
         else
         {
             <div class="window-control"
-                 @onclick="() => RendererProcessStore.Dispatch(new MaximizeWindowAction())">
+                 @onclick="() => StateStore.Dispatch(new MaximizeWindowAction())">
                 <SvgIcon IconName="maximize" Width="10" Height="10" Fill="white" />
             </div>
         }
-        <div class="window-control close">
+        <div class="window-control close"
+             @onclick="() => StateStore.Dispatch(new CloseWindowAction())">
             <SvgIcon IconName="close-lean" Width="10" Height="10" Fill="white" />
         </div>
     </div>
@@ -64,7 +65,7 @@
     protected override void OnStateChanged(AppState prevState, AppState newState)
     {
         CalculateColors(newState.HasFocus);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void CalculateColors(bool hasFocus)
@@ -74,5 +75,4 @@
         _backgroundColor = ThemingService.GetProperty(s =>
             hasFocus ? s.TitleBarActiveBackgroundColor : s.TitleBarInactiveBackgroundColor);
     }
-
 }

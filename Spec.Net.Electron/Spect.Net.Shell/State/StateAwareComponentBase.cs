@@ -15,13 +15,13 @@ namespace Spect.Net.Shell.State
         /// </summary>
         protected StateAwareComponentBase()
         {
-            RendererProcessStore.StateChange += HandleStateChanged;
+            StateStore.StateChange += HandleStateChanged;
         }
 
         /// <summary>
         /// Gets the application state.
         /// </summary>
-        protected AppState AppState => RendererProcessStore.GetState();
+        protected AppState AppState => StateStore.GetState();
 
         /// <summary>
         /// Override this method to handle application state changes.
@@ -59,7 +59,7 @@ namespace Spect.Net.Shell.State
         /// </summary>
         public void Dispose()
         {
-            RendererProcessStore.StateChange -= HandleStateChanged;
+            StateStore.StateChange -= HandleStateChanged;
         }
     }
 }

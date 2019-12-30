@@ -31,6 +31,13 @@ namespace Spect.Net.Shell.State.Actions
     }
 
     /// <summary>
+    /// Close the app window
+    /// </summary>
+    public sealed class CloseWindowAction : WindowActionBase
+    {
+    }
+
+    /// <summary>
     /// Signs that the app got the focus
     /// </summary>
     public sealed class AppGotFocusAction : WindowActionBase

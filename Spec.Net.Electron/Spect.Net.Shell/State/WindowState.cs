@@ -7,6 +7,7 @@
     {
         Normal,
         Maximized,
-        Minimized
+        Minimized,
+        ToClose
     }
 }

@@ -24,6 +24,9 @@
                 case WindowState.Minimized:
                     browserWindow.Minimize();
                     break;
+                case WindowState.ToClose:
+                    browserWindow.Close();
+                    break;
             }
         }
     }

@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using ElectronNET.API;
+﻿using ElectronNET.API;
 using ElectronNET.API.Entities;
-using Spect.Net.Shell.Messaging;
 using Spect.Net.Shell.State;
 using Spect.Net.Shell.State.Actions;
-using Spect.Net.Shell.State.Redux;
+using System.Threading.Tasks;
 
 namespace Spect.Net.Shell
 {
@@ -31,38 +29,17 @@ namespace Spect.Net.Shell
                 Width = 1152,
                 Height = 864,
                 Show = true,
+                Frame = false
             });
             Instance = new AppWindow(browserWindow);
             browserWindow.OnReadyToShow += () => browserWindow.Show();
-            browserWindow.OnFocus += () => MainProcessStore.Dispatch(new AppGotFocusAction());
-            browserWindow.OnBlur += () => MainProcessStore.Dispatch(new AppLostFocusAction());
-            browserWindow.OnRestore += async () =>
-            {
-                var action = (await browserWindow.IsMaximizedAsync())
-                    ? new MaximizeWindowAction() as IReducerAction
-                    : new RestoreWindowAction();
-                action.IsLocal = true;
-                MainProcessStore.Dispatch(action);
-            };
-            browserWindow.OnMaximize += () => MainProcessStore.Dispatch(new MaximizeWindowAction
-            {
-                IsLocal = true
-            });
-            browserWindow.OnMinimize += () => MainProcessStore.Dispatch(new MinimizeWindowAction
-            {
-                IsLocal = true
-            });
+            browserWindow.OnFocus += () => StateStore.Dispatch(new AppGotFocusAction());
+            browserWindow.OnBlur += () => StateStore.Dispatch(new AppLostFocusAction());
+            browserWindow.OnRestore += () => StateStore.Dispatch(new RestoreWindowAction());
+            browserWindow.OnMaximize += () => StateStore.Dispatch(new MaximizeWindowAction());
+            browserWindow.OnMinimize += () => StateStore.Dispatch(new MinimizeWindowAction());
+            browserWindow.OnUnmaximize += () => StateStore.Dispatch(new RestoreWindowAction());
         }
-
-        /// <summary>
-        /// Processor handling sample messages
-        /// </summary>
-        public SampleMessageProcessor SampleMessageProcessor { get; }
-
-        /// <summary>
-        /// Processor handling application state messages
-        /// </summary>
-        public AppActionMessageProcessor AppActionMessageProcessor { get; }
 
         /// <summary>
         /// Gets the BrowserWindows that displays this app
@@ -77,8 +54,6 @@ namespace Spect.Net.Shell
         private AppWindow(BrowserWindow window)
         {
             Window = window;
-            SampleMessageProcessor = new SampleMessageProcessor(window);
-            AppActionMessageProcessor = new AppActionMessageProcessor(window);
         }
     }
 }
