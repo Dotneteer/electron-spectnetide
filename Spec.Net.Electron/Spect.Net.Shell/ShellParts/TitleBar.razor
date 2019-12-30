@@ -1,0 +1,78 @@
+﻿@inherits StateAwareComponentBase
+
+@inject IJSRuntime JsRuntime
+@inject IThemingService<ThemeProps> ThemingService
+
+<div class="title-bar" style="background-color: @_backgroundColor; color: @_titleColor">
+    <div class="logo">
+        <img src="assets/images/spectnet-logo.png" />
+    </div>
+    <MenuBar />
+    <AppCaption />
+    <div class="title-buttons">
+        <div class="window-control"
+             @onclick="() => StateStore.Dispatch(new MinimizeWindowAction())">
+            <SvgIcon IconName="minimize" Width="10" Height="10" Fill="white" />
+        </div>
+        @if (AppState.WindowState == WindowState.Maximized)
+        {
+            <div class="window-control"
+                 @onclick="() => StateStore.Dispatch(new RestoreWindowAction())">
+                <SvgIcon IconName="restore" Width="10" Height="10" Fill="white" />
+            </div>
+        }
+        else
+        {
+            <div class="window-control"
+                 @onclick="() => StateStore.Dispatch(new MaximizeWindowAction())">
+                <SvgIcon IconName="maximize" Width="10" Height="10" Fill="white" />
+            </div>
+        }
+        <div class="window-control close"
+             @onclick="() => StateStore.Dispatch(new CloseWindowAction())">
+            <SvgIcon IconName="close-lean" Width="10" Height="10" Fill="white" />
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private string _titleColor;
+    private string _backgroundColor;
+
+    /// <summary>
+    /// Method invoked when the component is ready to start, having received its
+    /// initial parameters from its parent in the render tree.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        CalculateColors(true);
+    }
+
+    /// <summary>
+    /// Check if state change should be signed. Override this method to check if
+    /// the partial state in which the component is interested has changed.
+    /// </summary>
+    /// <param name="prevState">Previous application state</param>
+    /// <param name="newState">New application state</param>
+    /// <returns>True, if state change should be signed; otherwise, false.</returns>
+    protected override bool HasChanged(AppState prevState, AppState newState)
+    {
+        return prevState.HasFocus != newState.HasFocus
+               || prevState.WindowState != newState.WindowState;
+    }
+
+    protected override void OnStateChanged(AppState prevState, AppState newState)
+    {
+        CalculateColors(newState.HasFocus);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void CalculateColors(bool hasFocus)
+    {
+        _titleColor = ThemingService.GetProperty(s =>
+            hasFocus ? s.TitleBarActiveColor : s.TitleBarInactiveColor);
+        _backgroundColor = ThemingService.GetProperty(s =>
+            hasFocus ? s.TitleBarActiveBackgroundColor : s.TitleBarInactiveBackgroundColor);
+    }
+}

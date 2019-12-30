@@ -1,0 +1,30 @@
+﻿@using AppState = Spect.Net.Shell.State.AppState
+
+@inherits Spect.Net.Shell.State.StateAwareComponentBase
+@inject IThemingService<ThemeProps> ThemingService
+
+<div class="menu-bar" tabindex="0">
+    @foreach (var menuItem in AppState.Menu.Items)
+    {
+        <MenuButton Item="@menuItem" Highlight="true" TitleColor="@_titleColor" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string TitleColor { get; set; }
+
+    private string _titleColor;
+
+    protected override void OnStateChanged(AppState prevState, AppState newState)
+    {
+        CalculateColors(newState.HasFocus);
+        StateHasChanged();
+    }
+
+    private void CalculateColors(bool hasFocus)
+    {
+        _titleColor = ThemingService.GetProperty(s =>
+            hasFocus ? s.TitleBarActiveColor : s.TitleBarInactiveColor);
+    }
+}
