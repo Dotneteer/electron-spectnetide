@@ -15,7 +15,7 @@ namespace Spect.Net.Shell.Menus
         /// <summary>
         /// Menu items in the pane
         /// </summary>
-        public List<MenuItem> Items { get; set; }
+        public List<UiMenuItem> Items { get; set; }
 
         /// <summary>
         /// Left position in pixels

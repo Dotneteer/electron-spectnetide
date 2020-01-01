@@ -26,7 +26,7 @@ namespace Spect.Net.Shell.State
         /// <summary>
         /// The state of the menu
         /// </summary>
-        public MenuState MenuState { get; set; }
+        public AppMenuState MenuState { get; set; }
 
         /// <summary>
         /// The intial app state to use when intializing the stores
@@ -35,62 +35,14 @@ namespace Spect.Net.Shell.State
         {
             WindowState = WindowState.Normal,
             HasFocus = true,
-            MenuState = new MenuState
+            MenuState = new AppMenuState
             {
-                Menu = new Menu()
-                {
-                    Items = new List<IMenuItem>
-                    {
-                        new MenuItem("file")
-                        {
-                            Label = "&File"
-                        },
-                        new MenuItem("edit")
-                        {
-                            Label = "&Edit"
-                        },
-                        new MenuItem("view")
-                        {
-                            Label = "&View"
-                        }
-                    }
-                },
+                AppMenu = null,
                 SelectedIndex = -1,
                 HighlightAccessKeys = false,
                 OpenPanes = new List<MenuPaneInfo>(),
                 KeyboardAction = false
             }
         };
-    }
-
-    /// <summary>
-    /// This class represents the state of the menu
-    /// </summary>
-    public sealed class MenuState
-    {
-        /// <summary>
-        /// The collection of menu items
-        /// </summary>
-        public IMenu Menu { get; set; }
-
-        /// <summary>
-        /// The index of the pointed menu button in the menu bar
-        /// </summary>
-        public int SelectedIndex { get; set; }
-
-        /// <summary>
-        /// Indicates if access keys should be highlighted
-        /// </summary>
-        public bool HighlightAccessKeys { get; set; }
-
-        /// <summary>
-        /// Open menu panes
-        /// </summary>
-        public List<MenuPaneInfo> OpenPanes { get; set; }
-
-        /// <summary>
-        /// Indicates if the last action was a keyboard action
-        /// </summary>
-        public bool KeyboardAction { get; set; }
     }
 }

@@ -1,0 +1,52 @@
+﻿<div class="menu-pane">
+    @for (var i = 0; i < Items.Count; i++)
+    {
+        <MenuItem Item="@Items[i]"
+                  ItemIndex="@i"
+                  Highlight="@Highlight"
+                  Selected="@(SelectedIndex == i)"
+                  MenuItemPointed="@(item => OnMenuItemPointed(item))"
+                  MenuItemClicked="@(item => OnMenuItemClicked(item))" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Depth { get; set; }
+
+    [Parameter]
+    public List<UiMenuItem> Items { get; set; }
+
+    [Parameter]
+    public bool Highlight { get; set; }
+
+    [Parameter]
+    public int TopPosition { get; set; }
+
+    [Parameter]
+    public int SelectedIndex { get; set; } = -1;
+
+    [Parameter]
+    public EventCallback<MenuItemEventArgs> MenuItemPointed { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuItemEventArgs> MenuItemClicked { get; set; }
+
+    private async Task OnMenuItemPointed(MenuItem item)
+    {
+        await MenuItemPointed.InvokeAsync(new MenuItemEventArgs
+        {
+            Pane = this,
+            ItemIndex = item == null ? -1 : item.ItemIndex
+        });
+    }
+
+    private async Task OnMenuItemClicked(MenuItem item)
+    {
+        await MenuItemClicked.InvokeAsync(new MenuItemEventArgs
+        {
+            Pane = this,
+            ItemIndex = item == null ? -1 : item.ItemIndex
+        });
+    }
+}

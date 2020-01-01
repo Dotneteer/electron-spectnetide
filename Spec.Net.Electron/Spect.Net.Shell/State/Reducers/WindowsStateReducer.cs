@@ -30,7 +30,8 @@ namespace Spect.Net.Shell.State.Reducers
         /// <returns></returns>
         private static AppState ReduceWindowState(AppState state, IReducerAction action)
         {
-            switch (action)
+            if (!(action is WindowActionBase windowAction)) return state;
+            switch (windowAction)
             {
                 case MaximizeWindowAction _:
                     if (state.WindowState != WindowState.Maximized)

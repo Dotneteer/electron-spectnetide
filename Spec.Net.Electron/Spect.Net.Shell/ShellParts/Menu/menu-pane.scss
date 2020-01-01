@@ -1,0 +1,10 @@
+﻿.menu-pane {
+    position: absolute;
+    left: 100px;
+    top: 50px;
+    background-color: var(--menu-pane-background-color);
+    box-shadow: var(--menu-pane-shadow);
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0px;
+}

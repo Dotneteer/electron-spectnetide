@@ -16,6 +16,13 @@ namespace Spect.Net.Shell.Themes
         private string _activeId;
         private ThemeInfo<TPropSet> _activeTheme;
 
+        public void Reset()
+        {
+            _themes.Clear();
+            _activeId = null;
+            _activeTheme = default;
+        }
+
         /// <summary>
         /// Registers the theme
         /// </summary>

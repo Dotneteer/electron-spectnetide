@@ -33,9 +33,9 @@ namespace Spect.Net.Shell.State
                 // --- Action reducers
                 new List<Reducer<AppState>>
                 {
-                    WindowStateReducer.Create(WindowStateWorker.Transit)
+                    WindowStateReducer.Create(WindowStateWorker.Transit),
+                    AppMenuStateReducer.Create()
                 },
-
                 AppState.InitialState
             );
         }

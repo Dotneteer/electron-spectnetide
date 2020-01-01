@@ -27,6 +27,10 @@
             TitleBarInactiveColor = "#cccccc",
 
             MenuActiveBackgroundColor = "#505050",
+            MenuSelectedBackgroundColor = "#094771",
+            MenuTextColor = "#ffffff",
+            MenuPaneBackgroundColor = "#252526",
+            MenuPaneShadow = "rgb(0, 0, 0) 0px 2px 4px",
         };
 
         /// <summary>
@@ -51,7 +55,10 @@
             TitleBarInactiveColor = "#dddddd",
 
             MenuActiveBackgroundColor = "#505050",
-
+            MenuSelectedBackgroundColor = "#094771",
+            MenuTextColor = "#ffffff",
+            MenuPaneBackgroundColor = "#252526",
+            MenuPaneShadow = "rgb(0, 0, 0) 0px 2px 4px",
         };
     }
 }

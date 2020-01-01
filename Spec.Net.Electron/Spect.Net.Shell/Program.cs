@@ -18,8 +18,9 @@ namespace Spect.Net.Shell
                     // --- Allow Electron.NET
                     // --- Always use it before UseStartup
                     webBuilder
-                        .UseElectron(args)
-                        .UseStartup<Startup>();
+                        .UseStartup<Startup>()
+                        .UseElectron(args);
+
                 });
     }
 }

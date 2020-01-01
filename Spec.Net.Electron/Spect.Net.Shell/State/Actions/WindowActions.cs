@@ -3,7 +3,7 @@
 namespace Spect.Net.Shell.State.Actions
 {
     /// <summary>
-    /// This class represents the actions that belong to window state management.
+    /// This class is the common base class of actions that belong to window state management.
     /// </summary>
     public abstract class WindowActionBase: ReducerAction
     {

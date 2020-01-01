@@ -1,0 +1,98 @@
+﻿@using Spect.Net.Shell.Menus
+
+<div @ref="_hostElement" 
+     @onmouseenter="() => MenuItemPointed.InvokeAsync(this)"
+     @onmouseleave="() => MenuItemPointed.InvokeAsync(null)"
+     @onclick="() => MenuItemClicked.InvokeAsync(this)">
+    @if (Item is SeparatorMenuItem)
+    {
+        <div class="separator"></div>
+    } 
+    else
+    {
+        <div class="menu-item">
+            @if(_iconName != null)
+            {
+                <SvgIcon class="icon" IconName="@_iconName" Width="14" Height="14"/>
+            }
+            else
+            {
+                <div class="icon-placeholder"></div>
+            }
+        </div>
+        <div class="label">
+            <MenuText Text="@Item.Label" Highlight="@Highlight"/>
+        </div>
+        @if (_hasAccelerator)
+        {
+            <div class="accelerator">@_friendlyAcceleratorText</div>
+        }
+        @if (Item.HasSubitems)
+        {
+            <SvgIcon class="submenu-icon" IconName="submenu-arrow" Width="14" Height="14"/>
+        }
+    }
+</div>
+
+@code {
+    private ElementReference _hostElement;
+
+    [Parameter]
+    public UiMenuItem Item { get; set; }
+
+    [Parameter]
+    public int ItemIndex { get; set; }
+
+    [Parameter]
+    public bool Highlight { get; set; } = true;
+
+    [Parameter]
+    public bool Selected { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<MenuItem> MenuItemPointed { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuItem> MenuItemClicked { get; set; }
+
+    private string _iconName => Item.Checked ? "check" : null;
+
+    private bool _hasAccelerator => !Item.HasSubitems && Item.Accelerator != null;
+
+    private string _friendlyAcceleratorText
+        => String.Join(PlatformHelper.IsDarwin ? "" : "+",
+            Item.Accelerator.Split("+").Select(GetPlatformSpecificNameOrSymbolForModifier));
+
+    private string GetPlatformSpecificNameOrSymbolForModifier(string modifier)
+    {
+        var isDarwin = PlatformHelper.IsDarwin;
+        switch (modifier.ToLower())
+        {
+            case "cmdorctrl":
+            case "commandorcontrol":
+                return isDarwin ? "⌘" : "Ctrl";
+
+            case "ctrl":
+            case "control":
+                return isDarwin ? "⌃" : "Ctrl";
+
+            case "shift":
+                return isDarwin ? "⇧" : "Shift";
+
+            case "alt":
+                return isDarwin ? "⌥" : "Alt";
+
+            // --- Mac only
+            case "cmd":
+            case "command":
+                return "⌘";
+            case "option":
+                return "⌥";
+
+            // --- Special case space because no one would be able to see it
+            case " ":
+                return "Space";
+        }
+        return modifier;
+    }
+}

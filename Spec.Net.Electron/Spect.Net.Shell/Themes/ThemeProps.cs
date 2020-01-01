@@ -22,6 +22,9 @@
         public string TitleBarInactiveColor { get; set; }
 
         public string MenuActiveBackgroundColor { get; set; }
-
+        public string MenuSelectedBackgroundColor { get; set; }
+        public string MenuTextColor { get; set; }
+        public string MenuPaneBackgroundColor { get; set; }
+        public string MenuPaneShadow { get; set; }
     }
 }

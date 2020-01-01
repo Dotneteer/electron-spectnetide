@@ -1,14 +1,15 @@
-﻿@using AppState = Spect.Net.Shell.State.AppState
-
-@inherits Spect.Net.Shell.State.StateAwareComponentBase
+﻿@inherits Spect.Net.Shell.State.StateAwareComponentBase
 @inject IThemingService<ThemeProps> ThemingService
 
-<div class="menu-bar" tabindex="0">
-    @foreach (var menuItem in AppState.MenuState.Menu.Items)
-    {
-        <MenuButton Item="@menuItem" Highlight="true" TitleColor="@_titleColor" />
-    }
-</div>
+    <div class="menu-bar" tabindex="0">
+        @if (AppState?.MenuState?.AppMenu != null)
+        {
+            foreach (var menuItem in AppState.MenuState.AppMenu.Items)
+            {
+                <MenuButton Item="@menuItem" Highlight="true" TitleColor="@_titleColor" />
+            }
+        }
+    </div>
 
 @code {
     [Parameter]

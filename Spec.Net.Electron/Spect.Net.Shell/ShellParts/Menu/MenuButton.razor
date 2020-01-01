@@ -1,15 +1,15 @@
-﻿@using IMenuItem = Spect.Net.Shell.Menus.IMenuItem
-<div class="@_class"
+﻿<div class="@_class"
      style="color: @TitleColor"
      @onmouseenter="@OnMouseEnter"
      @onmouseleave="@OnMouseLeave"
      @onclick="@(async () => await OnButtonClicked.InvokeAsync(this))">
-    <MenuText Text="@Item.Label" Highlight="@Highlight"/>
+    <MenuText Text="@Item.Label" Highlight="@Highlight" />
 </div>
 
 @code {
+
     [Parameter]
-    public IMenuItem Item { get; set; }
+    public UiMenuItem Item { get; set; }
 
     [Parameter]
     public int Index { get; set; }

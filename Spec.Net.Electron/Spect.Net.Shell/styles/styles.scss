@@ -15,6 +15,7 @@
 
 // Title bar elements
 @import "../ShellParts/app-caption.scss";
-@import "../ShellParts/menu-bar.scss";
-@import "../ShellParts/menu-text.scss";
-@import "../ShellParts/menu-button.scss";
+@import "../ShellParts/Menu/menu-bar.scss";
+@import "../ShellParts/Menu/menu-text.scss";
+@import "../ShellParts/Menu/menu-button.scss";
+@import "../ShellParts/Menu/menu-item.scss";

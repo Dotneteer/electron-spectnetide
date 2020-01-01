@@ -10,6 +10,11 @@ namespace Spect.Net.Shell.Themes
     public interface IThemingService<TPropSet>
     {
         /// <summary>
+        /// Resets the theming service
+        /// </summary>
+        void Reset();
+
+        /// <summary>
         /// Registers the theme
         /// </summary>
         /// <param name="theme">Theme to register</param>
