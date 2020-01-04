@@ -154,3 +154,54 @@ html, body {
     background-color: var(--menu-active-background-color); }
   .menu-button .show-access-key {
     text-decoration: underline; }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  padding: 2px 24px 2px 6px;
+  color: var(--menu-text-color); }
+  .menu-item.selected {
+    background: var(--menu-selected-background-color); }
+  .menu-item.disabled {
+    opacity: 0.3; }
+  .menu-item.submenu {
+    padding-right: 8px; }
+
+.icon {
+  margin-right: 4px; }
+
+.icon-placeholder {
+  width: 18px; }
+
+.separator {
+  border: none;
+  height: 1px;
+  border-bottom: 1px solid #ffffff;
+  margin: 4px 0px;
+  opacity: 0.3; }
+
+.accelerator {
+  display: flex;
+  flex-shrink: 0;
+  flex-grow: 1;
+  justify-content: flex-end;
+  margin-left: 12px; }
+
+.submenu-icon {
+  margin-left: 4px;
+  margin-top: 2px; }
+
+.menu-pane {
+  position: absolute;
+  left: 100px;
+  top: 50px;
+  background-color: var(--menu-pane-background-color);
+  box-shadow: var(--menu-pane-shadow);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0px;
+  z-index: 100; }

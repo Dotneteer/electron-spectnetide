@@ -16,13 +16,6 @@
         opacity: 0.3;
     }
 
-    &.label {
-        flex-grow: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
     &.submenu {
         padding-right: 8px;
     }

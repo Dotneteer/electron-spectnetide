@@ -1,38 +1,36 @@
 ﻿@using Spect.Net.Shell.Menus
 
-<div @ref="_hostElement" 
-     @onmouseenter="() => MenuItemPointed.InvokeAsync(this)"
-     @onmouseleave="() => MenuItemPointed.InvokeAsync(null)"
-     @onclick="() => MenuItemClicked.InvokeAsync(this)">
-    @if (Item is SeparatorMenuItem)
-    {
-        <div class="separator"></div>
-    } 
-    else
-    {
-        <div class="menu-item">
-            @if(_iconName != null)
-            {
-                <SvgIcon class="icon" IconName="@_iconName" Width="14" Height="14"/>
-            }
-            else
-            {
-                <div class="icon-placeholder"></div>
-            }
-        </div>
-        <div class="label">
-            <MenuText Text="@Item.Label" Highlight="@Highlight"/>
-        </div>
-        @if (_hasAccelerator)
+    <div @ref="_hostElement"
+         @onmouseenter="() => MenuItemPointed.InvokeAsync(this)"
+         @onmouseleave="() => MenuItemPointed.InvokeAsync(null)"
+         @onclick="() => MenuItemClicked.InvokeAsync(this)">
+        @if (Item is SeparatorMenuItem)
         {
-            <div class="accelerator">@_friendlyAcceleratorText</div>
+            <div class="separator"></div>
         }
-        @if (Item.HasSubitems)
+        else
         {
-            <SvgIcon class="submenu-icon" IconName="submenu-arrow" Width="14" Height="14"/>
+            <div class="menu-item">
+                @if (_iconName != null)
+                {
+                    <SvgIcon XClass="icon" IconName="@_iconName" Width="14" Height="14" />
+                }
+                else
+                {
+                    <div class="icon-placeholder"></div>
+                }
+                <MenuText Text="@(Item.Label ?? String.Empty)" Highlight="@Highlight" />
+                @if (_hasAccelerator)
+                {
+                    <div class="accelerator">@_friendlyAcceleratorText</div>
+                }
+                @if (Item.HasSubitems)
+                {
+                    <SvgIcon XClass="submenu-icon" IconName="submenu-arrow" Width="14" Height="14" />
+                }
+            </div>
         }
-    }
-</div>
+    </div>
 
 @code {
     private ElementReference _hostElement;

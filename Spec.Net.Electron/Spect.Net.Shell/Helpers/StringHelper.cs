@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Spect.Net.Shell.Helpers
 {
@@ -36,6 +37,30 @@ namespace Spect.Net.Shell.Helpers
             return (pre, access, post);
 
             string Unescape(string accessText) => accessText.Replace("&&", "&");
+        }
+
+        public static string ToCssName(this string name)
+        {
+            var sb = new StringBuilder(100);
+            var lastCharWasLowerCase = false;
+            foreach (var ch in name)
+            {
+                if (char.IsLower(ch))
+                {
+                    sb.Append(ch);
+                    lastCharWasLowerCase = true;
+                }
+                else
+                {
+                    if (lastCharWasLowerCase)
+                    {
+                        sb.Append("-");
+                    }
+                    sb.Append(char.ToLower(ch));
+                    lastCharWasLowerCase = false;
+                }
+            }
+            return sb.ToString();
         }
     }
 }

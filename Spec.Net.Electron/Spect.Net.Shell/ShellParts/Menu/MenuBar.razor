@@ -4,10 +4,12 @@
     <div class="menu-bar" tabindex="0">
         @if (AppState?.MenuState?.AppMenu != null)
         {
-            foreach (var menuItem in AppState.MenuState.AppMenu.Items)
+            var menu = AppState.MenuState.AppMenu;
+            foreach (var menuItem in menu.Items)
             {
                 <MenuButton Item="@menuItem" Highlight="true" TitleColor="@_titleColor" />
             }
+            <MenuPane Items="@menu.Items[2].Items" Highlight="true"/>
         }
     </div>
 

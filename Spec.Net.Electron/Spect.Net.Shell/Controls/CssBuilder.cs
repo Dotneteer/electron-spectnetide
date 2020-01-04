@@ -11,7 +11,7 @@ namespace Spect.Net.Shell.Controls
         /// Call Build() to return the completed CSS Classes as a string. 
         /// </summary>
         /// <param name="value"></param>
-        public CssBuilder(string value) => _stringBuffer = value;
+        public CssBuilder(string value) => _stringBuffer = value ?? string.Empty;
 
         /// <summary>
         /// Adds a raw string to the builder that will be concatenated with the next class or value added to the builder.
@@ -29,8 +29,11 @@ namespace Spect.Net.Shell.Controls
         /// </summary>
         /// <param name="value">CSS Class to add</param>
         /// <returns>CssBuilder</returns>
-        public CssBuilder AddClass(string value) => AddValue(" " + value);
-
+        public CssBuilder AddClass(string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value)) AddValue(" " + value);
+            return this;
+        }
         /// <summary>
         /// Adds a conditional CSS Class to the builder with space separator.
         /// </summary>
@@ -62,6 +65,46 @@ namespace Spect.Net.Shell.Controls
         /// <param name="when">Condition in which the CSS Class is added.</param>
         /// <returns>CssBuilder</returns>
         public CssBuilder AddClass(CssBuilder builder, Func<bool> when) => AddClass(builder, when());
+
+        /// <summary>
+        /// Adds a conditional CSS Class to the builder with space separator.
+        /// </summary>
+        /// <param name="builder">CSS Class to conditionally add.</param>
+        /// <param name="when">Condition in which the CSS Class is added.</param>
+        /// <returns>CssBuilder</returns>
+        public CssBuilder AddClass(object value)
+        {
+            if (value == null) return this;
+            if (value is string strValue) return AddClass(strValue);
+
+            foreach(var propInfo in value.GetType().GetProperties())
+            {
+                if (propInfo.PropertyType == typeof(bool) && propInfo.GetValue(value).Equals(true))
+                {
+                    AddClass(propInfo.Name);
+                } 
+                else if (propInfo.PropertyType == typeof(string))
+                {
+                    var propValue = propInfo.GetValue(value);
+                    if (propValue != null)
+                    {
+                        AddClass(propValue).ToString();
+                    }
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a conditional CSS Class to the builder with space separator.
+        /// </summary>
+        /// <param name="value">CSS Class to conditionally add.</param>
+        /// <param name="when">Condition in which the CSS Class is added.</param>
+        /// <returns>CssBuilder</returns>
+        public CssBuilder AddClass(object value, Func<bool> when)
+        {
+            return when?.Invoke() ?? false ? AddClass(value) : this;
+        }
 
         /// <summary>
         /// Finalize the completed CSS Classes as a string.

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Spect.Net.Shell.Helpers;
 
 namespace Spect.Net.Shell.Themes
 {
@@ -110,7 +111,7 @@ namespace Spect.Net.Shell.Themes
             {
                 if (propInfo.GetCustomAttributes(typeof(NonCssAttribute), false).Length == 0)
                 {
-                    sb.Append($"--{ToCssName(propInfo.Name)}:{propInfo.GetValue(props)};");
+                    sb.Append($"--{propInfo.Name.ToCssName()}:{propInfo.GetValue(props)};");
                 }
             }
             return sb.ToString();
@@ -122,30 +123,6 @@ namespace Spect.Net.Shell.Themes
         protected virtual void OnThemeChanged()
         {
             ThemeChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public static string ToCssName(string name)
-        {
-            var sb = new StringBuilder(100);
-            var lastCharWasLowerCase = false;
-            foreach (var ch in name)
-            {
-                if (char.IsLower(ch))
-                {
-                    sb.Append(ch);
-                    lastCharWasLowerCase = true;
-                }
-                else
-                {
-                    if (lastCharWasLowerCase)
-                    {
-                        sb.Append("-");
-                    }
-                    sb.Append(char.ToLower(ch));
-                    lastCharWasLowerCase = false;
-                }
-            }
-            return sb.ToString();
         }
     }
 }

@@ -7,6 +7,13 @@ namespace Spect.Net.Shell.Menus
     /// </summary>
     public class ElectronShellMenuItem : UiMenuItem
     {
-        public ElectronShellMenuItem(MenuRole? role) : base(null, null, role) { }
+        public ElectronShellMenuItem(MenuRole? role, string label = null, string accelerator = null) 
+            : base(null, label, role) 
+        { 
+            if (!string.IsNullOrWhiteSpace(accelerator))
+            {
+                WithAccelerator(accelerator);
+            }
+        }
     }
 }

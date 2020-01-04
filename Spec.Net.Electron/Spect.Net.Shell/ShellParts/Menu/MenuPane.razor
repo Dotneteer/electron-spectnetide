@@ -1,12 +1,44 @@
 ﻿<div class="menu-pane">
-    @for (var i = 0; i < Items.Count; i++)
-    {
-        <MenuItem Item="@Items[i]"
-                  ItemIndex="@i"
-                  Highlight="@Highlight"
-                  Selected="@(SelectedIndex == i)"
-                  MenuItemPointed="@(item => OnMenuItemPointed(item))"
-                  MenuItemClicked="@(item => OnMenuItemClicked(item))" />
+    @{
+        var lastItemWasGroup = false;
+        var groupJustEnded = false;
+        var index = 0;
+        for (var i = 0; i < Items.Count; i++)
+        {
+            var item = Items[i];
+            // --- Provide separator between groups
+            if (i > 0 && item.HasSubitems != lastItemWasGroup || groupJustEnded)
+            {
+                <MenuItem Item="@(new SeparatorMenuItem())" />
+            }
+            lastItemWasGroup = item.HasSubitems;
+            groupJustEnded = false;
+            if (item.HasSubitems)
+            {
+                // --- We are about to process a command group
+                for (var j = 0; j < item.Items.Count; j++)
+                {
+                    var subitem = item.Items[j];
+                    <MenuItem Item="@subitem"
+                              ItemIndex="@index"
+                              Highlight="@Highlight"
+                              Selected="@(SelectedIndex == index)"
+                              MenuItemPointed="@(mi => OnMenuItemPointed(mi))"
+                              MenuItemClicked="@(mi => OnMenuItemClicked(mi))" />
+                    index++;
+                }
+                groupJustEnded = true;
+            }
+            else
+            {
+                <MenuItem Item="@item"
+                          ItemIndex="@index"
+                          Highlight="@Highlight"
+                          Selected="@(SelectedIndex == index)"
+                          MenuItemPointed="@(mi => OnMenuItemPointed(mi))"
+                          MenuItemClicked="@(mi => OnMenuItemClicked(mi))" />
+            }
+        }
     }
 </div>
 

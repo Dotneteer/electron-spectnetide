@@ -1,7 +1,12 @@
 ﻿@inject IJSRuntime JsRuntime
+@inherits StyleAwareComponentBase
 
-<div class="activity-bar">
+<div class="@ClassValue" @onclick="OnClick">
 </div>
 
-@code {
+@code { 
+    public void OnClick()
+    {
+        AppWindow.Instance.SetupMenu();
+    }
 }

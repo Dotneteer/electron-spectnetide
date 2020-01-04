@@ -43,7 +43,11 @@ namespace Spect.Net.Shell
                 Frame = true
             });
             Instance = new AppWindow(browserWindow);
-            browserWindow.OnReadyToShow += () => browserWindow.Show();
+            browserWindow.OnReadyToShow += () =>
+            {
+                Console.WriteLine("OnReadyToShow invoked");
+                browserWindow.Show();
+            };
             browserWindow.OnFocus += () => StateStore.Dispatch(new AppGotFocusAction());
             browserWindow.OnBlur += () => StateStore.Dispatch(new AppLostFocusAction());
             browserWindow.OnRestore += () => StateStore.Dispatch(new RestoreWindowAction());
@@ -70,10 +74,10 @@ namespace Spect.Net.Shell
         private AppWindow(BrowserWindow window)
         {
             Window = window;
-            SetupMenu();
+            //SetupMenu();
         }
 
-        private void SetupMenu()
+        public void SetupMenu()
         {
             // --- Create the command structure that represents the main menu
             var aboutGroup = new UiMenuItem()
@@ -91,7 +95,7 @@ namespace Spect.Net.Shell
                 .Append(new ElectronShellMenuItem(MenuRole.unhide));
 
             var quitGroup = new UiMenuItem()
-                .Append(new ElectronShellMenuItem(MenuRole.quit));
+                .Append(new ElectronShellMenuItem(MenuRole.quit, "E&xit"));
 
             var darwinMenu = new UiMenuItem("darwin", "ZX Spectrum IDE")
                 .Append(aboutGroup)
@@ -264,6 +268,19 @@ namespace Spect.Net.Shell
                             _commandMap[item.Id] = item;
                         }
                     }
+                    groupJustEnded = true;
+                }
+                else {
+                    // --- Normal menu item
+                    pane.Add(new MenuItem
+                    {
+                        Label = subitem.Label,
+                        Accelerator = subitem.Accelerator,
+                        Click = () => subitem.OnExecute(Window)
+                    });
+
+                    // --- Let's map this item by its ID
+                    _commandMap[subitem.Id] = subitem;
                 }
             }
 

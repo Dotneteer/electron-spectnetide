@@ -1,6 +1,6 @@
 ﻿@inject IThemingService<ThemeProps> ThemingService
 
-<svg class="svg-icon"
+<svg class="@(new CssBuilder("svg-icon").AddClass(XClass))"
      xmlns="http://www.w3.org/2000/svg"
      style="@_thisStyle"
      viewBox="@_viewBox">
@@ -27,6 +27,9 @@
             _viewBox = $"0 0 {this._iconInfo.Width} {this._iconInfo.Height}";
         }
     }
+
+    [Parameter]
+    public string XClass { get; set; }
 
     [Parameter]
     public int? Width { get; set; }

@@ -10,7 +10,9 @@ namespace Spect.Net.Shell.Commands
             base("create-project", PlatformHelper.IsDarwin
                 ? "New Project..."
                 : "&New project...")
-        { }
+        {
+            WithAccelerator("cmdorctrl+Q");
+        }
 
         /// <summary>
         /// Creates a new project

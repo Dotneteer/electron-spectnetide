@@ -1,17 +1,16 @@
-﻿@if (!string.IsNullOrEmpty(_preText))
-{
-    <span>@_preText</span>
-}
-@if (!string.IsNullOrEmpty(_accessKeyText))
-{
-    <span aria-hidden="true"
-        class="@_class">
-        @_accessKeyText
-    </span>
-}
-@if (!string.IsNullOrEmpty(_postText))
-{
-    <span aria-hidden="true">@_postText</span>
+﻿@{
+    if (!string.IsNullOrEmpty(_preText))
+    {
+        <span>@_preText</span>
+    }
+    if (!string.IsNullOrEmpty(_accessKeyText))
+    {
+        <span aria-hidden="true" class="@_class">@_accessKeyText</span>
+    }
+    if (!string.IsNullOrEmpty(_postText))
+    {
+        <span aria-hidden="true">@_postText</span>
+    }
 }
 
 @code {

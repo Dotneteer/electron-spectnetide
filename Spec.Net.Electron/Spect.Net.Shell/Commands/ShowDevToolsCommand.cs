@@ -18,6 +18,7 @@ namespace Spect.Net.Shell.Commands
         /// <param name="window">Host browser window</param>
         public override void OnExecute(BrowserWindow window)
         {
+            window.WebContents.OpenDevTools();
         }
     }
 }
