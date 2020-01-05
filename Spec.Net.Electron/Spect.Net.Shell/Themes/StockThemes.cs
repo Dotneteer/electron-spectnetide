@@ -31,6 +31,7 @@
             MenuTextColor = "#ffffff",
             MenuPaneBackgroundColor = "#252526",
             MenuPaneShadow = "rgb(0, 0, 0) 0px 2px 4px",
+            SeparatorBorder = "1px solid #ffffff",
         };
 
         /// <summary>
@@ -59,6 +60,7 @@
             MenuTextColor = "#ffffff",
             MenuPaneBackgroundColor = "#252526",
             MenuPaneShadow = "rgb(0, 0, 0) 0px 2px 4px",
+            SeparatorBorder = "1px solid #ffffff",
         };
     }
 }

@@ -1,5 +1,29 @@
-﻿<h3>MenuPaneList</h3>
+﻿@if (Panes != null)
+{
+    for (var i = 0; i < Panes.Count; i++)
+    {
+        var pane = Panes[i];
+        <MenuPane Depth="@i"
+            Items="@pane.Items"
+            Highlight="@HighLight"
+            LeftPosition="pane.LeftPos"
+            TopPosition="pane.TopPos"
+            SelectedIndex="pane.SelectedIndex"
+            MenuItemPointed="@MenuItemPointed"
+            MenuItemClicked="@MenuItemClicked" />
+    }
+}
 
 @code {
+    [Parameter]
+    public List<MenuPaneInfo> Panes { get; set; }
 
+    [Parameter]
+    public bool HighLight { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuItemEventArgs> MenuItemPointed { get; set; }
+
+    [Parameter]
+    public EventCallback<MenuItemEventArgs> MenuItemClicked { get; set; }
 }

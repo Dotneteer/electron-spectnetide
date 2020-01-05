@@ -1,9 +1,12 @@
-﻿namespace Spect.Net.Shell.Interop
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Spect.Net.Shell.Interop
 {
     /// <summary>
     /// This class represents the dimensions of en element
     /// </summary>
-    public class ElementOffset
+    public class ElementBoundaries: IEquatable<ElementBoundaries>
     {
         /// <summary>
         /// An integer representing the offset to the left in pixels from the 
@@ -26,5 +29,14 @@
         /// An integer corresponding to the offsetHeight pixel value of the element.
         /// </summary>
         public int OffsetHeight { get; set; }
+
+        public bool Equals([AllowNull] ElementBoundaries other)
+        {
+            if (other == null) return false;
+            return OffsetLeft == other.OffsetLeft
+                && OffsetTop == other.OffsetTop
+                && OffsetWidth == other.OffsetWidth
+                && OffsetHeight == other.OffsetHeight;
+        }
     }
 }

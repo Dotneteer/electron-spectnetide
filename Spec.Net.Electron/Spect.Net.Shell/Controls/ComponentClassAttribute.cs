@@ -2,11 +2,11 @@
 
 namespace Spect.Net.Shell.Controls
 {
-    public sealed class ClassAttribute: Attribute
+    public sealed class ComponentClassAttribute: Attribute
     {
         public string Value { get; }
 
-        public ClassAttribute(string value = null)
+        public ComponentClassAttribute(string value = null)
         {
             Value = value;
         }

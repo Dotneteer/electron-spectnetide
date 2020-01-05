@@ -1,4 +1,4 @@
-﻿<div class="menu-pane">
+﻿<div class="menu-pane" style="@_styleValue">
     @{
         var lastItemWasGroup = false;
         var groupJustEnded = false;
@@ -43,6 +43,8 @@
 </div>
 
 @code {
+    private string _styleValue;
+
     [Parameter]
     public int Depth { get; set; }
 
@@ -51,6 +53,9 @@
 
     [Parameter]
     public bool Highlight { get; set; }
+
+    [Parameter]
+    public int LeftPosition { get; set; }
 
     [Parameter]
     public int TopPosition { get; set; }
@@ -63,6 +68,15 @@
 
     [Parameter]
     public EventCallback<MenuItemEventArgs> MenuItemClicked { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _styleValue = new StyleBuilder()
+            .AddStyle("z-index", $"{Depth + 100}")
+            .AddStyle("left", $"{LeftPosition}px")
+            .AddStyle("top", $"{TopPosition}px")
+            .Build();
+    }
 
     private async Task OnMenuItemPointed(MenuItem item)
     {

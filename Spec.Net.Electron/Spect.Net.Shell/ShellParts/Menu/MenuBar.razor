@@ -1,33 +1,111 @@
-﻿@inherits Spect.Net.Shell.State.StateAwareComponentBase
-@inject IThemingService<ThemeProps> ThemingService
+﻿@{
+    // This component is responsible to display the menu bar of the application and manage
+    // all keyboard and mouse events that control the menu behavior.
+}
 
-    <div class="menu-bar" tabindex="0">
-        @if (AppState?.MenuState?.AppMenu != null)
+@inherits StateAwareComponentBase
+@inject IThemingService<ThemeProps> ThemingService
+@inject IFocusManagerService FocusManagerService
+
+<div class="menu-bar" tabindex="0">
+    @{
+        var menuState = AppState?.MenuState;
+        if (menuState?.AppMenu != null)
         {
-            var menu = AppState.MenuState.AppMenu;
-            foreach (var menuItem in menu.Items)
+            // --- Display the top-level menu items as MenuButtons
+            foreach (var menuItem in menuState.AppMenu.Items)
             {
-                <MenuButton Item="@menuItem" Highlight="true" TitleColor="@_titleColor" />
+                <MenuButton Item="@menuItem"
+                            Highlight="true"
+                            TitleColor="@_titleColor"
+                            BoundariesChanged="OnBoundariesChanged" />
             }
-            <MenuPane Items="@menu.Items[2].Items" Highlight="true"/>
+
+            // --- Display the list of open menu panes
+            <MenuPaneList Panes="@menuState.OpenPanes"
+                          HighLight="menuState.HighlightAccessKeys"
+                          MenuItemPointed="OnMenuItemPointed"
+                          MenuItemClicked="OnMenuItemClicked" />
         }
-    </div>
+    }
+</div>
 
 @code {
-    [Parameter]
-    public string TitleColor { get; set; }
-
+    // --- Store the color of the title (it's different for focused/unfocused state)
     private string _titleColor;
 
+    // --- To display menu paned, we need to keep track of menu button boundaries
+    private readonly Dictionary<MenuButton, ElementBoundaries> _boundaries =
+        new Dictionary<MenuButton, ElementBoundaries>();
+
+    /// <summary>
+    /// Turns on listening to FocusManager events
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        FocusManagerService.AppKeyDown += OnKeyDown;
+    }
+
+    /// <summary>
+    /// Turns off listening to FocusManager events
+    /// </summary>
+    public override void Dispose()
+    {
+        base.Dispose();
+        FocusManagerService.AppKeyDown -= OnKeyDown;
+    }
+    
+    /// <summary>
+    /// Respons to application state changes
+    /// </summary>
     protected override void OnStateChanged(AppState prevState, AppState newState)
     {
         CalculateColors(newState.HasFocus);
         InvokeAsync(StateHasChanged);
     }
 
+    /// <summary>
+    /// Calculate MenuBar color according to focused/unfocused state
+    /// </summary>
+    /// <param name="hasFocus"></param>
     private void CalculateColors(bool hasFocus)
     {
         _titleColor = ThemingService.GetProperty(s =>
             hasFocus ? s.TitleBarActiveColor : s.TitleBarInactiveColor);
+    }
+
+    /// <summary>
+    /// Store the boundaries of a particular menu button
+    /// </summary>
+    private void OnBoundariesChanged(BoundariesEventArgs args)
+    {
+        var menuButton = args.Component as MenuButton;
+        if (menuButton != null)
+        {
+            _boundaries[menuButton] = args.Boundaries;
+        }
+    }
+
+    /// <summary>
+    /// Listen to keydown events to implement menu navigation
+    /// </summary>
+    private void OnKeyDown(object sender, KeyboardEventArgs args)
+    {
+        Console.WriteLine($"KeyDown: {args.Code}");
+    }
+
+    /// <summary>
+    /// Respond to the event when an item on a displayed menu pane is pointed.
+    /// </summary>
+    private void OnMenuItemPointed(MenuItemEventArgs item)
+    {
+    }
+
+    /// <summary>
+    /// Respond to the event when an item on a displayed menu pane is clicked
+    /// </summary>
+    private void OnMenuItemClicked(MenuItemEventArgs item)
+    {
     }
 }

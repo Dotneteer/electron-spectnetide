@@ -10,10 +10,10 @@
         }
         else
         {
-            <div class="menu-item">
+            <div class="@_itemClass">
                 @if (_iconName != null)
                 {
-                    <SvgIcon XClass="icon" IconName="@_iconName" Width="14" Height="14" />
+                    <SvgIcon Class="icon" IconName="@_iconName" Width="14" Height="14" />
                 }
                 else
                 {
@@ -26,7 +26,7 @@
                 }
                 @if (Item.HasSubitems)
                 {
-                    <SvgIcon XClass="submenu-icon" IconName="submenu-arrow" Width="14" Height="14" />
+                    <SvgIcon Class="submenu-icon" IconName="submenu-arrow" Width="14" Height="14" />
                 }
             </div>
         }
@@ -34,6 +34,7 @@
 
 @code {
     private ElementReference _hostElement;
+    private string _itemClass;
 
     [Parameter]
     public UiMenuItem Item { get; set; }
@@ -52,6 +53,18 @@
 
     [Parameter]
     public EventCallback<MenuItem> MenuItemClicked { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _itemClass = new CssBuilder("menu-item")
+            .AddClass(new {
+                disabled = !Item.Enabled,
+                @checked = Item.Checked,
+                submenu = Item.HasSubitems,
+                selected = Selected
+            })
+            .Build();
+    }
 
     private string _iconName => Item.Checked ? "check" : null;
 

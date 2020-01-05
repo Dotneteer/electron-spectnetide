@@ -1,4 +1,8 @@
-﻿<div class="@_class"
+﻿@using Newtonsoft.Json
+@inherits StyleAwareComponentBase
+
+<div @ref="RootElement"
+     class="@ClassValue"
      style="color: @TitleColor"
      @onmouseenter="@OnMouseEnter"
      @onmouseleave="@OnMouseLeave"
@@ -7,6 +11,7 @@
 </div>
 
 @code {
+    private bool _pointed;
 
     [Parameter]
     public UiMenuItem Item { get; set; }
@@ -27,7 +32,7 @@
         set
         {
             _pointed = value;
-            _class = "menu-button" + (value ? " pointed" : "");
+            XClass = value ? "pointed" : "";
         }
     }
 
@@ -36,10 +41,6 @@
 
     [Parameter]
     public EventCallback<MenuButton> OnButtonClicked { get; set; }
-
-
-    private string _class = "menu-button";
-    private bool _pointed;
 
     private async Task OnMouseEnter()
     {

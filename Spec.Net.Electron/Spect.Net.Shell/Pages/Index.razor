@@ -1,17 +1,49 @@
-﻿@page "/"
+﻿@{ 
+    // This component is responsible to display the main application container and
+    // and manage the application-wide services:
+    // - IThemingService (Handles the current theme used)
+    // - IFocusManagerService (Handles focus and document keyboard events)
+}
+
+@page "/"
 
 @inject IJSRuntime JsRuntime
 @inject IThemingService<ThemeProps> ThemingService
+@inject IFocusManagerService FocusManagerService
 
-<div class="app-container" style="@_themeStyle">
+<div
+    class="app-container"
+    style="@_themeStyle"
+    tabindex="0"
+    @onkeydown="(arg) => FocusManagerService.RaiseAppKeyDown(arg)"
+    @onkeyup="(arg) => FocusManagerService.RaiseAppKeyUp(arg)">
     <TitleBar/>
     <MainPanel></MainPanel>
     <StatusBar/>
 </div>
 
 @code {
+    // --- The style that represents the CSS variables of the current theme
     private string _themeStyle;
 
+    // --- Keeps a reference to the singleton IFocusManager instance
+    // --- So that it can be used in JS --> .NET calls
+    private static IFocusManagerService _focusManagerInstance;
+
+    /// <summary>
+    /// This static method is used when JS detects a focus change within
+    /// the application
+    /// </summary>
+    [JSInvokable]
+    public static Task HandleFocusChangeAsync()
+    {
+        _focusManagerInstance?.RaiseFocusChanged();
+        return Task.FromResult(0);
+    }
+
+    /// <summary>
+    /// Initialize the app-wide services
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -23,8 +55,15 @@
         ThemingService.ThemeChanged += OnThemeChanged;
         ThemingService.SetTheme("dark");
         await JsRuntime.Hello();
+
+        // --- Allow JS Interop to reach the focus manager
+        _focusManagerInstance = FocusManagerService;
+        await JsRuntime.StartFocusChangeCheck();
     }
 
+    /// <summary>
+    /// Respond to the event when the current theme changes
+    /// </summary>
     private void OnThemeChanged(object sender, EventArgs e)
     {
         _themeStyle = ThemingService.ComposeStyleAttributeFromTheme();

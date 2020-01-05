@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Spect.Net.Shell.AppServices;
 using Spect.Net.Shell.Themes;
 
 namespace Spect.Net.Shell
@@ -23,6 +24,7 @@ namespace Spect.Net.Shell
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<IThemingService<ThemeProps>, ThemingService<ThemeProps>>();
+            services.AddSingleton<IFocusManagerService, FocusManagerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

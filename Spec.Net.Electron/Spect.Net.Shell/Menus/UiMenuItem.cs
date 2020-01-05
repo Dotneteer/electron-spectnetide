@@ -1,5 +1,6 @@
 ﻿using ElectronNET.API;
 using ElectronNET.API.Entities;
+using Spect.Net.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;

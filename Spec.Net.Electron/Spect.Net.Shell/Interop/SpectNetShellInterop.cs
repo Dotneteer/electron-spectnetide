@@ -21,9 +21,19 @@ namespace Spect.Net.Shell.Interop
         /// <param name="jsRuntime">JS runtime object</param>
         /// <param name="element">HTML element reference</param>
         /// <returns>Element dimensions</returns>
-        public static async Task<ElementOffset> GetElementOffset(this IJSRuntime jsRuntime, ElementReference element)
+        public static async Task<ElementBoundaries> GetElementOffset(this IJSRuntime jsRuntime, ElementReference element)
         {
-            return await jsRuntime.InvokeAsync<ElementOffset>("SpectNetShell.getElementOffset", element);
+            return await jsRuntime.InvokeAsync<ElementBoundaries>("SpectNetShell.getElementOffset", element);
+        }
+
+        /// <summary>
+        /// Start focus change checking
+        /// </summary>
+        /// <param name="jsRuntime">JS runtime object</param>
+        /// <returns>Element dimensions</returns>
+        public static async Task StartFocusChangeCheck(this IJSRuntime jsRuntime)
+        {
+            await jsRuntime.InvokeAsync<object>("SpectNetShell.checkFocusChange");
         }
     }
 }

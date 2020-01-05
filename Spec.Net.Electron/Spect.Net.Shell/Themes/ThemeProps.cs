@@ -26,5 +26,6 @@
         public string MenuTextColor { get; set; }
         public string MenuPaneBackgroundColor { get; set; }
         public string MenuPaneShadow { get; set; }
+        public string SeparatorBorder { get; set; }
     }
 }

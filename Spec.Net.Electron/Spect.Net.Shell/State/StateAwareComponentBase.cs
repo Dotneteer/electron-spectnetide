@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.AspNetCore.Components;
+using Spect.Net.Shell.Controls;
 
 namespace Spect.Net.Shell.State
 {
@@ -7,8 +7,7 @@ namespace Spect.Net.Shell.State
     /// This class implements a components that is aware of the current
     /// application state.
     /// </summary>
-    public abstract class StateAwareComponentBase: ComponentBase,
-        IDisposable
+    public abstract class StateAwareComponentBase: StyleAwareComponentBase
     {
         /// <summary>
         /// Constructs an instance of <see cref="T:Microsoft.AspNetCore.Components.ComponentBase" />.
@@ -57,7 +56,7 @@ namespace Spect.Net.Shell.State
         /// Performs application-defined tasks associated with freeing, releasing,
         /// or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             StateStore.StateChange -= HandleStateChanged;
         }

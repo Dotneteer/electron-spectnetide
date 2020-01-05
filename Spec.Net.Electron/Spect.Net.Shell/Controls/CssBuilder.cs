@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spect.Net.Shell.Helpers;
+using System;
 
 namespace Spect.Net.Shell.Controls
 {
@@ -16,8 +17,8 @@ namespace Spect.Net.Shell.Controls
         /// <summary>
         /// Adds a raw string to the builder that will be concatenated with the next class or value added to the builder.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns>CssBuilder</returns>
+        /// <param name="value">Value to add to the builder</param>
+        /// <returns>This instance</returns>
         public CssBuilder AddValue(string value)
         {
             _stringBuffer += value;
@@ -81,14 +82,14 @@ namespace Spect.Net.Shell.Controls
             {
                 if (propInfo.PropertyType == typeof(bool) && propInfo.GetValue(value).Equals(true))
                 {
-                    AddClass(propInfo.Name);
+                    AddClass(propInfo.Name.ToCssName());
                 } 
                 else if (propInfo.PropertyType == typeof(string))
                 {
                     var propValue = propInfo.GetValue(value);
                     if (propValue != null)
                     {
-                        AddClass(propValue).ToString();
+                        AddClass(propValue).ToString().ToCssName();
                     }
                 }
             }

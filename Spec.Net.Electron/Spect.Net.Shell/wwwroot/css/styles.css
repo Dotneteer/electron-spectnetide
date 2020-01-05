@@ -35,7 +35,8 @@ html, body {
   flex-shrink: 0;
   height: 100%;
   background-color: var(--app-background-color);
-  user-select: none; }
+  user-select: none;
+  outline: none; }
   .app-container.vertical-resize {
     cursor: ns-resize; }
   .app-container.horizontal-resize {
@@ -169,7 +170,7 @@ html, body {
   .menu-item.disabled {
     opacity: 0.3; }
   .menu-item.submenu {
-    padding-right: 8px; }
+    padding-right: 12px; }
 
 .icon {
   margin-right: 4px; }
@@ -180,8 +181,8 @@ html, body {
 .separator {
   border: none;
   height: 1px;
-  border-bottom: 1px solid #ffffff;
-  margin: 4px 0px;
+  border-bottom: var(--separator-border);
+  margin: 4px 12px;
   opacity: 0.3; }
 
 .accelerator {
@@ -203,5 +204,4 @@ html, body {
   box-shadow: var(--menu-pane-shadow);
   display: flex;
   flex-direction: column;
-  padding: 8px 0px;
-  z-index: 100; }
+  padding: 8px 0px; }

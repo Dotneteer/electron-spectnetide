@@ -43,6 +43,8 @@ namespace Spect.Net.Shell.Helpers
         {
             var sb = new StringBuilder(100);
             var lastCharWasLowerCase = false;
+            if (name.StartsWith("@")) name = name.Substring(1);
+
             foreach (var ch in name)
             {
                 if (char.IsLower(ch))
