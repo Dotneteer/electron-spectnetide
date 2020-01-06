@@ -1,5 +1,6 @@
 ﻿using System;
 using Spect.Net.Shell.Controls;
+using Spect.Net.Shell.State.Redux;
 
 namespace Spect.Net.Shell.State
 {
@@ -15,6 +16,15 @@ namespace Spect.Net.Shell.State
         protected StateAwareComponentBase()
         {
             StateStore.StateChange += HandleStateChanged;
+        }
+
+        /// <summary>
+        /// Dispatches the specified action.
+        /// </summary>
+        /// <param name="action">Action to dispatch</param>
+        public void Dispatch(IReducerAction action)
+        {
+            StateStore.Dispatch(action);
         }
 
         /// <summary>

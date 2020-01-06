@@ -40,7 +40,7 @@ namespace Spect.Net.Shell
                 Width = 1152,
                 Height = 864,
                 Show = true,
-                Frame = true
+                Frame = false
             });
             Instance = new AppWindow(browserWindow);
             browserWindow.OnReadyToShow += () =>

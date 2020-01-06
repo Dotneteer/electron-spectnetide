@@ -12,12 +12,15 @@
         var menuState = AppState?.MenuState;
         if (menuState?.AppMenu != null)
         {
+            var appMenu = menuState.AppMenu;
             // --- Display the top-level menu items as MenuButtons
-            foreach (var menuItem in menuState.AppMenu.Items)
+            for (var i = 0; i < appMenu.Items.Count; i++)
             {
+                var menuItem = appMenu.Items[i];
                 <MenuButton Item="@menuItem"
-                            Highlight="true"
+                            Highlight="menuState.HighlightAccessKeys"
                             TitleColor="@_titleColor"
+                            Pointed="@(menuState.SelectedIndex == i)"
                             BoundariesChanged="OnBoundariesChanged" />
             }
 
@@ -38,6 +41,9 @@
     private readonly Dictionary<MenuButton, ElementBoundaries> _boundaries =
         new Dictionary<MenuButton, ElementBoundaries>();
 
+    // --- Shows the pane index to remove
+    private int _delayedRemove;
+
     /// <summary>
     /// Turns on listening to FocusManager events
     /// </summary>
@@ -45,6 +51,7 @@
     {
         base.OnInitialized();
         FocusManagerService.AppKeyDown += OnKeyDown;
+        FocusManagerService.AppKeyUp += OnKeyUp;
     }
 
     /// <summary>
@@ -54,8 +61,9 @@
     {
         base.Dispose();
         FocusManagerService.AppKeyDown -= OnKeyDown;
+        FocusManagerService.AppKeyUp -= OnKeyUp;
     }
-    
+
     /// <summary>
     /// Respons to application state changes
     /// </summary>
@@ -87,12 +95,82 @@
         }
     }
 
+    private AppMenuState MenuState => AppState.MenuState;
+
     /// <summary>
     /// Listen to keydown events to implement menu navigation
     /// </summary>
     private void OnKeyDown(object sender, KeyboardEventArgs args)
     {
         Console.WriteLine($"KeyDown: {args.Code}");
+
+        // --- Set the pointed state of the menu bar
+        if (args.Code == "AltLeft") Dispatch(new MenuAltPressedAction());
+
+        // --- No button is pointed, no more action 
+        if (MenuState.SelectedIndex < 0) return;
+
+        // --- From this point on, we use the keyboard.
+        // --- Here, we allow the mouse to delay submenu removal.
+        _delayedRemove = -1;
+        if (args.Code == "Escape")
+        {
+            Dispatch(new MenuPaneClosedAction());
+            return;
+        }
+
+        // --- Move one step to left, or close the last pane.
+        if (args.Code == "ArrowLeft") {
+            if (MenuState.OpenPanes.Count > 1)
+            {
+                // --- Close the last pane
+                Dispatch(new MenuPaneClosedAction());
+                return;
+            }
+
+            // --- Move to the left
+            var index = MenuState.SelectedIndex - 1;
+            if (index < 0) index = MenuState.AppMenu.Items.Count - 1;
+
+            // --- Open the pane of the current menu button
+            // TODO: Implement this
+            Dispatch(new MenuButtonSetAction(index, null, true));
+            return;
+        }
+
+        // --- Move one step to right, or open a submenu pane.
+        if (args.Code == "ArrowRight") {
+            // --- Try to open the submenu of the current item and complete if succeeded
+            // TODO: Implement this
+
+            // --- We're not in the first menu pane
+            if (MenuState.OpenPanes.Count > 1)
+            {
+                return;
+            }
+
+            // --- We're in the first menu pane, move to the right
+            var index = MenuState.SelectedIndex + 1;
+            if (index > MenuState.AppMenu.Items.Count - 1) index = 0;
+
+            // --- Open the pane of the current menu button
+            // TODO: Implement this
+
+            Dispatch(new MenuButtonSetAction(index, null, true));
+            return;
+        }
+
+    }
+
+    /// <summary>
+    /// Listen to keydown events to implement menu navigation
+    /// </summary>
+    private void OnKeyUp(object sender, KeyboardEventArgs args)
+    {
+        if (args.Code == "AltLeft")
+        {
+            Dispatch(new MenuAltReleasedAction());
+        }
     }
 
     /// <summary>
