@@ -59,4 +59,18 @@ namespace Spect.Net.Shell.State.Actions
             KeyboardAction = keyboardAction;
         }
     }
+
+    /// <summary>
+    /// Moves one menu item down in the current pane
+    /// </summary>
+    public sealed class MenuItemDownAction : MenuActionBase
+    {
+    }
+
+    /// <summary>
+    /// Moves one menu item up in the current pane
+    /// </summary>
+    public sealed class MenuItemUpAction : MenuActionBase
+    {
+    }
 }

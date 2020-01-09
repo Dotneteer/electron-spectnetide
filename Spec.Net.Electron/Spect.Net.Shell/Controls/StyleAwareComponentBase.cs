@@ -39,6 +39,12 @@ namespace Spect.Net.Shell.Controls
         }
 
         /// <summary>
+        /// The identifier of this component that makes it unique for its parent component
+        /// </summary>
+        [Parameter]
+        public string ComponentInstanceID { get; set; } = Guid.NewGuid().ToString();
+
+        /// <summary>
         /// Use this parameter to set the extra classes to be used
         /// </summary>
         [Parameter]
@@ -102,7 +108,8 @@ namespace Spect.Net.Shell.Controls
                 _elementBoundaries = await JsRuntime.GetElementOffset(_rootElement);
                 if (!_elementBoundaries.Equals(oldElementBoundaries))
                 {
-                    await BoundariesChanged.InvokeAsync(new BoundariesEventArgs(this, _elementBoundaries));
+                    await BoundariesChanged.InvokeAsync(
+                        new BoundariesEventArgs(ComponentInstanceID, _elementBoundaries));
                 }
             }
         }

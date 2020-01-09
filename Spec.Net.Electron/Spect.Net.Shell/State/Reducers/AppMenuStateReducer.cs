@@ -58,23 +58,26 @@ namespace Spect.Net.Shell.State.Reducers
                             }));
 
                 case MenuPaneClosedAction _:
-                    var (ParentPanes, LastPane) = GetOpenMenuPanes(state.MenuState);
-                    if (LastPane != null)
                     {
+                        var (ParentPanes, LastPane) = GetOpenMenuPanes(state.MenuState);
+                        if (LastPane != null)
+                        {
+                            return state.Assign(
+                                s => s.MenuState = s.MenuState.Assign(
+                                    a => {
+                                        a.OpenPanes = ParentPanes;
+                                        a.KeyboardAction = true;
+                                    }));
+                        }
                         return state.Assign(
                             s => s.MenuState = s.MenuState.Assign(
                                 a => {
-                                    a.OpenPanes = ParentPanes;
+                                    a.SelectedIndex = -1;
+                                    a.HighlightAccessKeys = false;
                                     a.KeyboardAction = true;
                                 }));
+
                     }
-                    return state.Assign(
-                        s => s.MenuState = s.MenuState.Assign(
-                            a => {
-                                a.SelectedIndex = -1;
-                                a.HighlightAccessKeys = false;
-                                a.KeyboardAction = true;
-                            }));
 
                 case MenuButtonSetAction menuButtonSetAction:
                     return state.Assign(
@@ -86,6 +89,34 @@ namespace Spect.Net.Shell.State.Reducers
                                     : new List<MenuPaneInfo>();
                                 a.KeyboardAction = menuButtonSetAction.KeyboardAction;
                             }));
+
+                case MenuItemDownAction _:
+                    {
+                        var (ParentPanes, LastPane) = GetOpenMenuPanes(state.MenuState);
+                        if (LastPane == null) return state;
+                        return state.Assign(
+                            s => s.MenuState = s.MenuState.Assign(
+                                a => {
+                                    a.OpenPanes = ParentPanes.Concat(
+                                        new List<MenuPaneInfo> { 
+                                            LastPane.Assign(lp => lp.SelectedIndex = GetNextMenuItemIndex(lp, 1)) 
+                                        }).ToList();
+                                }));
+                    }
+
+                case MenuItemUpAction _:
+                    {
+                        var (ParentPanes, LastPane) = GetOpenMenuPanes(state.MenuState);
+                        if (LastPane == null) return state;
+                        return state.Assign(
+                            s => s.MenuState = s.MenuState.Assign(
+                                a => {
+                                    a.OpenPanes = ParentPanes.Concat(
+                                        new List<MenuPaneInfo> {
+                                            LastPane.Assign(lp => lp.SelectedIndex = GetNextMenuItemIndex(lp, -1))
+                                        }).ToList();
+                                }));
+                    }
 
                 default:
                     return state;
@@ -107,6 +138,25 @@ namespace Spect.Net.Shell.State.Reducers
                     return (new List<MenuPaneInfo>(state.OpenPanes.Take(state.OpenPanes.Count - 1)), 
                         state.OpenPanes.Last());
                 }
+            }
+
+            // --- Gets the next menu item index according to the specified step direction
+            int GetNextMenuItemIndex(MenuPaneInfo pane, int step)
+            {
+                var items = pane.ItemsFlattened.ToArray();
+                var count = items.Length;
+                var selectedIndex = pane.SelectedIndex;
+                for (var i = 1; i < count; i++)
+                {
+                    var nextItemIndex = (selectedIndex + step * i + count) % count;
+                    var nextItem = items[nextItemIndex];
+                    if (nextItem.Visible && nextItem.Enabled)
+                    {
+                        selectedIndex = nextItemIndex;
+                        break;
+                    }
+                }
+                return selectedIndex;
             }
 
         }

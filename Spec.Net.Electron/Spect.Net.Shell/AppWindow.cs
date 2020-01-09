@@ -138,7 +138,7 @@ namespace Spect.Net.Shell
                 .Append(devToolsGroup);
 
             var help1Group = new UiMenuItem()
-                .Append(new UiMenuItem("help-topic-1", "Help topic #1").Enable(false))
+                .Append(new UiMenuItem("help-topic-1", "Help topic #1"))
                 .Append(new UiMenuItem("help-topic-2", "Help topic #2").Enable(false));
 
             var help3SubGroup = new UiMenuItem("help-topic-3", "Help topic #&3")

@@ -11,16 +11,16 @@ namespace Spect.Net.Shell.Controls
         /// <summary>
         /// The component
         /// </summary>
-        public ComponentBase Component { get; }
+        public string ComponentId { get; }
         
         /// <summary>
         /// Current boundaries of the root element
         /// </summary>
         public ElementBoundaries Boundaries { get; }
 
-        public BoundariesEventArgs(ComponentBase component, ElementBoundaries boundaries)
+        public BoundariesEventArgs(string componentId, ElementBoundaries boundaries)
         {
-            Component = component;
+            ComponentId = componentId;
             Boundaries = boundaries;
         }
     }

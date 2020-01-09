@@ -18,6 +18,8 @@
             {
                 var menuItem = appMenu.Items[i];
                 <MenuButton Item="@menuItem"
+                            Index="@i"
+                            ComponentInstanceID="@ButtonId(i)"
                             Highlight="menuState.HighlightAccessKeys"
                             TitleColor="@_titleColor"
                             Pointed="@(menuState.SelectedIndex == i)"
@@ -38,8 +40,8 @@
     private string _titleColor;
 
     // --- To display menu paned, we need to keep track of menu button boundaries
-    private readonly Dictionary<MenuButton, ElementBoundaries> _boundaries =
-        new Dictionary<MenuButton, ElementBoundaries>();
+    private readonly Dictionary<string, ElementBoundaries> _boundaries =
+        new Dictionary<string, ElementBoundaries>();
 
     // --- Shows the pane index to remove
     private int _delayedRemove;
@@ -88,14 +90,22 @@
     /// </summary>
     private void OnBoundariesChanged(BoundariesEventArgs args)
     {
-        var menuButton = args.Component as MenuButton;
-        if (menuButton != null)
+        if (args.ComponentId != null)
         {
-            _boundaries[menuButton] = args.Boundaries;
+            _boundaries[args.ComponentId] = args.Boundaries;
         }
     }
 
+    /// <summary>
+    /// Gets the ID of the specified menu button
+    /// </summary>
+    private string ButtonId(int index) => $"MenuButton{index}";
+
+    /// <summary>
+    /// Shortcut to the app's menu state
+    /// </summary>
     private AppMenuState MenuState => AppState.MenuState;
+
 
     /// <summary>
     /// Listen to keydown events to implement menu navigation
@@ -133,8 +143,10 @@
             if (index < 0) index = MenuState.AppMenu.Items.Count - 1;
 
             // --- Open the pane of the current menu button
-            // TODO: Implement this
-            Dispatch(new MenuButtonSetAction(index, null, true));
+            var pane = MenuState.OpenPanes.Count > 0
+                ? GetButtonPane(index)
+                : null;
+            Dispatch(new MenuButtonSetAction(index, pane, true));
             return;
         }
 
@@ -154,12 +166,34 @@
             if (index > MenuState.AppMenu.Items.Count - 1) index = 0;
 
             // --- Open the pane of the current menu button
-            // TODO: Implement this
-
-            Dispatch(new MenuButtonSetAction(index, null, true));
+            var pane = MenuState.OpenPanes.Count > 0
+                ? GetButtonPane(index)
+                : null;
+            Dispatch(new MenuButtonSetAction(index, pane, true));
             return;
         }
 
+        // --- Move one step down, or open the pane of a button
+        if (args.Code == "ArrowDown")
+        {
+            if (MenuState.OpenPanes.Count == 0)
+            {
+                var index = MenuState.SelectedIndex;
+                Dispatch(new MenuButtonSetAction(index, GetButtonPane(index), true));
+            }
+            else
+            {
+                Dispatch(new MenuItemDownAction());
+            }
+            return;
+        }
+
+        // --- Move one step down in the current open pane
+        if (args.Code == "ArrowUp")
+        {
+            Dispatch(new MenuItemUpAction());
+            return;
+        }
     }
 
     /// <summary>
@@ -185,5 +219,51 @@
     /// </summary>
     private void OnMenuItemClicked(MenuItemEventArgs item)
     {
+    }
+
+    /// <summary>
+    /// Gets the information about the specified menu pane
+    /// </summary>
+    /// <param name="index">MenuButton index</param>
+    private MenuPaneInfo GetButtonPane(int index)
+    {
+        MenuPaneInfo pane = null;
+        if (_boundaries.TryGetValue(ButtonId(index), out var boundary))
+        {
+            pane = new MenuPaneInfo
+            {
+                ParentIndex = -1,
+                SelectedIndex = -1,
+                Items = MenuState.AppMenu.Items[index].Items,
+                LeftPos = boundary.OffsetLeft,
+                TopPos = boundary.OffsetTop + boundary.OffsetHeight
+            };
+            if (MenuState.KeyboardAction)
+            {
+                SetFirstMenuItemIndex(pane);
+            }
+        }
+        return pane;
+    }
+
+    /// <summary>
+    /// Sets the index of the first available menu item within the pane.
+    /// </summary>
+    /// <param name="pane"></param>
+    private void SetFirstMenuItemIndex(MenuPaneInfo pane)
+    {
+        var items = pane.Items;
+        var selectedIndex = -1;
+        var index = 0;
+        foreach(var item in pane.ItemsFlattened)
+        {
+            if (item.Visible && item.Enabled)
+            {
+                selectedIndex = index;
+                break;
+            }
+            index++;
+        }
+        pane.SelectedIndex = selectedIndex;
     }
 }

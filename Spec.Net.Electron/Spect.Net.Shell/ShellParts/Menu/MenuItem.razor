@@ -54,7 +54,7 @@
     [Parameter]
     public EventCallback<MenuItem> MenuItemClicked { get; set; }
 
-    protected override void OnInitialized()
+    protected override void OnParametersSet()
     {
         _itemClass = new CssBuilder("menu-item")
             .AddClass(new {
