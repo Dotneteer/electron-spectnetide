@@ -5,12 +5,15 @@
         var pane = Panes[i];
         <MenuPane Depth="@i"
             Items="@pane.Items"
+            ComponentInstanceID="@MenuBar.GetMenuPaneId(i)"
             Highlight="@HighLight"
             LeftPosition="pane.LeftPos"
             TopPosition="pane.TopPos"
             SelectedIndex="pane.SelectedIndex"
             MenuItemPointed="@MenuItemPointed"
-            MenuItemClicked="@MenuItemClicked" />
+            MenuItemClicked="@MenuItemClicked"
+            BoundariesChanged="@OnPaneBoundariesChanged" 
+            ItemBoundaryChanged="@OnItemBoundariesChanged"/>
     }
 }
 
@@ -26,4 +29,31 @@
 
     [Parameter]
     public EventCallback<MenuItemEventArgs> MenuItemClicked { get; set; }
+
+    public Dictionary<string, ElementBoundaries> PaneBoundaries { get; set; }
+        = new Dictionary<string, ElementBoundaries>();
+
+    public Dictionary<string, Dictionary<string, ElementBoundaries>> PaneItemBoundaries { get; }
+        = new Dictionary<string, Dictionary<string, ElementBoundaries>>();
+
+    /// <summary>
+    /// Store the boundaries of a particular menu pane
+    /// </summary>
+    private void OnPaneBoundariesChanged(BoundariesEventArgs args)
+    {
+        if (args.ComponentId != null)
+        {
+            PaneBoundaries[args.ComponentId] = args.Boundaries;
+            PaneItemBoundaries[args.ComponentId] = new Dictionary<string, ElementBoundaries>();
+        }
+    }
+
+    /// <summary>
+    /// Store the boundaries of a particular menu item of a pane
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnItemBoundariesChanged(BoundariesEventArgs args)
+    {
+        PaneItemBoundaries[args.ParentComponentId][args.ComponentId] = args.Boundaries;
+    }
 }

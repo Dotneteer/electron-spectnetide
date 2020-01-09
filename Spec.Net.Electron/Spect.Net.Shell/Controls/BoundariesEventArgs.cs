@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using Spect.Net.Shell.Interop;
+﻿using Spect.Net.Shell.Interop;
 
 namespace Spect.Net.Shell.Controls
 {
@@ -9,7 +8,7 @@ namespace Spect.Net.Shell.Controls
     public class BoundariesEventArgs
     {
         /// <summary>
-        /// The component
+        /// The ID of the component
         /// </summary>
         public string ComponentId { get; }
         
@@ -18,10 +17,16 @@ namespace Spect.Net.Shell.Controls
         /// </summary>
         public ElementBoundaries Boundaries { get; }
 
-        public BoundariesEventArgs(string componentId, ElementBoundaries boundaries)
+        /// <summary>
+        /// The ID of the parent component (optional)
+        /// </summary>
+        public string ParentComponentId { get; }
+
+        public BoundariesEventArgs(string componentId, ElementBoundaries boundaries, string parentComponentId = null)
         {
             ComponentId = componentId;
             Boundaries = boundaries;
+            ParentComponentId = parentComponentId;
         }
     }
 }

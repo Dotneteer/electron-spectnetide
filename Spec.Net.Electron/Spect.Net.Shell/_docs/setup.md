@@ -17,10 +17,11 @@
 7. Copy the path of the project
 8. Start Visual Studio Developer Command Prompt
 9. `cd <project path copied in step 5>`
-10. `dotnet new tool-manifest`
+10. `dotnet new tool-manifest --force`
 11. `dotnet tool install ElectronNET.CLI`
-12. `dotnet electronize init`
+12  Remove the `electron.manifest.json` file from the Spect.Net.Shell folder.
+13. `dotnet electronize init`
 14. Restart Visual Studio
-14. 
+
 
 More details: https://jimbuck.io/building-desktop-apps-with-blazor/

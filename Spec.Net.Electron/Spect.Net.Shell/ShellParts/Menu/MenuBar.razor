@@ -19,18 +19,22 @@
                 var menuItem = appMenu.Items[i];
                 <MenuButton Item="@menuItem"
                             Index="@i"
-                            ComponentInstanceID="@ButtonId(i)"
+                            ComponentInstanceID="@GetMenuButtonId(i)"
                             Highlight="menuState.HighlightAccessKeys"
                             TitleColor="@_titleColor"
                             Pointed="@(menuState.SelectedIndex == i)"
-                            BoundariesChanged="OnBoundariesChanged" />
+                            BoundariesChanged="@OnButtonBoundariesChanged" 
+                            OnMouseEntered="@OnMenuButtonMouseEnter"
+                            OnButtonClicked="@OnMenuButtonClick"
+                            />
             }
 
             // --- Display the list of open menu panes
-            <MenuPaneList Panes="@menuState.OpenPanes"
-                          HighLight="menuState.HighlightAccessKeys"
-                          MenuItemPointed="OnMenuItemPointed"
-                          MenuItemClicked="OnMenuItemClicked" />
+            <MenuPaneList @ref="@_menuPaneListComponent"
+                          Panes="@menuState.OpenPanes"
+                          HighLight="@menuState.HighlightAccessKeys"
+                          MenuItemPointed="@OnMenuItemPointed"
+                          MenuItemClicked="@OnMenuItemClicked" />
         }
     }
 </div>
@@ -39,12 +43,36 @@
     // --- Store the color of the title (it's different for focused/unfocused state)
     private string _titleColor;
 
-    // --- To display menu paned, we need to keep track of menu button boundaries
-    private readonly Dictionary<string, ElementBoundaries> _boundaries =
+    // --- To display menu panes, we need to keep track of menu button boundaries
+    private readonly Dictionary<string, ElementBoundaries> _buttonBoundaries =
         new Dictionary<string, ElementBoundaries>();
 
     // --- Shows the pane index to remove
-    private int _delayedRemove;
+    private int _delayedRemove = -1;
+
+    // --- We use this when when pointing with the mouse
+    private int _lastSubmenuParent = -1;
+
+    // --- The menu item the mouse entered last time
+    private MenuItemEventArgs _lastMouseEntered;
+
+    // --- Reference to this component
+    private MenuPaneList _menuPaneListComponent;
+
+    /// <summary>
+    /// Gets the ID of a menu button
+    /// </summary>
+    public static string GetMenuButtonId(int index) => $"Button{index}";
+
+    /// <summary>
+    /// Gets the ID of a pane with a particular index
+    /// </summary>
+    public static string GetMenuPaneId(int index) => $"Pane{index}";
+
+    /// <summary>
+    /// Gets the ID of a menu item
+    /// </summary>
+    public static string GetMenuItemId(int index) => $"Item{index}";
 
     /// <summary>
     /// Turns on listening to FocusManager events
@@ -67,7 +95,7 @@
     }
 
     /// <summary>
-    /// Respons to application state changes
+    /// Respond to application state changes
     /// </summary>
     protected override void OnStateChanged(AppState prevState, AppState newState)
     {
@@ -88,18 +116,13 @@
     /// <summary>
     /// Store the boundaries of a particular menu button
     /// </summary>
-    private void OnBoundariesChanged(BoundariesEventArgs args)
+    private void OnButtonBoundariesChanged(BoundariesEventArgs args)
     {
         if (args.ComponentId != null)
         {
-            _boundaries[args.ComponentId] = args.Boundaries;
+            _buttonBoundaries[args.ComponentId] = args.Boundaries;
         }
     }
-
-    /// <summary>
-    /// Gets the ID of the specified menu button
-    /// </summary>
-    private string ButtonId(int index) => $"MenuButton{index}";
 
     /// <summary>
     /// Shortcut to the app's menu state
@@ -110,7 +133,7 @@
     /// <summary>
     /// Listen to keydown events to implement menu navigation
     /// </summary>
-    private void OnKeyDown(object sender, KeyboardEventArgs args)
+    private async void OnKeyDown(object sender, KeyboardEventArgs args)
     {
         Console.WriteLine($"KeyDown: {args.Code}");
 
@@ -153,13 +176,10 @@
         // --- Move one step to right, or open a submenu pane.
         if (args.Code == "ArrowRight") {
             // --- Try to open the submenu of the current item and complete if succeeded
-            // TODO: Implement this
+            if (TryOpenSubmenu()) return;
 
             // --- We're not in the first menu pane
-            if (MenuState.OpenPanes.Count > 1)
-            {
-                return;
-            }
+            if (MenuState.OpenPanes.Count > 1) return;
 
             // --- We're in the first menu pane, move to the right
             var index = MenuState.SelectedIndex + 1;
@@ -170,6 +190,13 @@
                 ? GetButtonPane(index)
                 : null;
             Dispatch(new MenuButtonSetAction(index, pane, true));
+            return;
+        }
+
+        // --- Execute the current menu item
+        if (args.Code == "Enter")
+        {
+            MenuItemAction();
             return;
         }
 
@@ -194,6 +221,39 @@
             Dispatch(new MenuItemUpAction());
             return;
         }
+
+        // --- Do we need to check the accelerator keys?
+        if (!MenuState.HighlightAccessKeys) return;
+
+        // --- Yes, we need to
+        if (MenuState.OpenPanes.Count > 0)
+        {
+            // --- Check the topmost open pane
+            var pane = MenuState.OpenPanes.Last();
+            var pressedIndex = FindAccessKeyIndex(args.Code, pane.Items);
+            if (pressedIndex < 0) return;
+
+            // --- Accelerator key found, execute the item after a short delay
+            Dispatch(new MenuItemSelectAction(pressedIndex));
+            await Task.Delay(100);
+            MenuItemAction();
+        }
+        else
+        {
+            // --- Check the main menu
+            var pressedIndex = FindAccessKeyIndex(args.Code, MenuState.AppMenu.Items, false);
+            if (pressedIndex < 0) return;
+            // --- Access button found, set the main menu item to display
+            var pane = MenuState.OpenPanes.Count > 0
+                ? GetButtonPane(pressedIndex)
+                : null;
+            Dispatch(new MenuButtonSetAction(pressedIndex, pane, true));
+
+            // --- Open the related menu pane
+            var index = MenuState.SelectedIndex;
+            pane = GetButtonPane(index);
+            Dispatch(new MenuButtonSetAction(index, pane, true));
+        }
     }
 
     /// <summary>
@@ -208,10 +268,82 @@
     }
 
     /// <summary>
+    /// Listen to the mouseenter event of menu buttons
+    /// </summary>
+    private void OnMenuButtonMouseEnter(MenuButton button)
+    {
+        var pane = MenuState.OpenPanes.Count > 0
+            ? GetButtonPane(button.Index)
+            : null;
+        Dispatch(new MenuButtonSetAction(button.Index, pane, false));
+        _lastMouseEntered = null;
+    }
+
+    /// <summary>
+    /// Listen to the click event of menu buttons
+    /// </summary>
+    private void OnMenuButtonClick(MenuButton button)
+    {
+        if (MenuState.OpenPanes.Count > 0)
+        {
+            Dispatch(new MenuPaneClosedAction());
+        }
+        else
+        {
+            var pane = GetButtonPane(button.Index);
+            Dispatch(new MenuButtonClickAction(pane, button.Index));
+        }
+    }
+
+    /// <summary>
     /// Respond to the event when an item on a displayed menu pane is pointed.
     /// </summary>
-    private void OnMenuItemPointed(MenuItemEventArgs item)
+    private async void OnMenuItemPointed(MenuItemEventArgs item)
     {
+        if (_lastMouseEntered?.Pane?.Depth == item.Pane.Depth
+            && _lastMouseEntered?.ItemIndex == item.ItemIndex)
+        {
+            return;
+        }
+
+        _lastMouseEntered = item;
+
+        // --- Check delayed remove
+        if (_delayedRemove < 0 && item.Pane.Depth < MenuState.OpenPanes.Count - 1)
+        {
+
+            // --- We're about to remove a displayed submenu pane. Let allow the user move
+            // --- with the mouse for a little time before hiding the submenu item.
+            _delayedRemove = MenuState.OpenPanes.Count - 1;
+            _lastSubmenuParent = MenuState.OpenPanes[_delayedRemove].ParentIndex;
+
+            // --- We remove the last submenu if the last mouse point is not on the submenu or
+            // --- the parent menu item.
+            await Task.Delay(400);
+            if (_lastMouseEntered?.Pane?.Depth < _delayedRemove
+                && MenuState.OpenPanes[_delayedRemove - 1].SelectedIndex != _lastSubmenuParent)
+            {
+                Dispatch(new MenuKeepPaneAction(_lastMouseEntered.Pane.Depth));
+            }
+            _delayedRemove = -1;
+        }
+
+        // --- Select the pointed menu item
+        Dispatch(new MenuItemPointAction(item.Pane.Depth, item.ItemIndex));
+        var parentIndex = MenuState.OpenPanes[item.Pane.Depth].ParentIndex;
+        for (var i = item.Pane.Depth - 1; i >= 0; i--)
+        {
+            Dispatch(new MenuItemPointAction(i, parentIndex));
+            parentIndex = MenuState.OpenPanes[i].ParentIndex;
+        }
+
+        // --- Open submenu, provided the current item has it -- with a little delay
+        await Task.Delay(600);
+        var submenuPane = GetSubmenuPane();
+        if (submenuPane != null)
+        {
+            Dispatch(new MenuPaneOpenAction(submenuPane, false));
+        }
     }
 
     /// <summary>
@@ -219,6 +351,11 @@
     /// </summary>
     private void OnMenuItemClicked(MenuItemEventArgs item)
     {
+        var menuItem = MenuState.OpenPanes[item.Pane.Depth].Items.Flatten().ToArray()[item.ItemIndex];
+        if (menuItem.Visible && menuItem.Enabled)
+        {
+            ExecuteMenuItem(menuItem);
+        }
     }
 
     /// <summary>
@@ -228,7 +365,7 @@
     private MenuPaneInfo GetButtonPane(int index)
     {
         MenuPaneInfo pane = null;
-        if (_boundaries.TryGetValue(ButtonId(index), out var boundary))
+        if (_buttonBoundaries.TryGetValue(GetMenuButtonId(index), out var boundary))
         {
             pane = new MenuPaneInfo
             {
@@ -250,12 +387,11 @@
     /// Sets the index of the first available menu item within the pane.
     /// </summary>
     /// <param name="pane"></param>
-    private void SetFirstMenuItemIndex(MenuPaneInfo pane)
+    private static void SetFirstMenuItemIndex(MenuPaneInfo pane)
     {
-        var items = pane.Items;
         var selectedIndex = -1;
         var index = 0;
-        foreach(var item in pane.ItemsFlattened)
+        foreach(var item in pane.Items.Flatten())
         {
             if (item.Visible && item.Enabled)
             {
@@ -265,5 +401,87 @@
             index++;
         }
         pane.SelectedIndex = selectedIndex;
+    }
+
+    /// <summary>
+    /// Gets the pane information about the topmost menu pane
+    /// </summary>
+    /// <returns></returns>
+    private MenuPaneInfo GetSubmenuPane()
+    {
+        // --- Check if we have an available submenu item
+        var lastPaneId = MenuState.OpenPanes.Count - 1;
+        if (lastPaneId < 0) return null;
+
+        var pane = MenuState.OpenPanes.Last();
+        if (pane.SelectedIndex < 0) return null;
+
+        var item = pane.Items.Flatten().ToArray()[pane.SelectedIndex];
+        if (!item.HasSubitems) return null;
+
+        // --- We have a submenu item that can be displayed
+        var paneId = GetMenuPaneId(lastPaneId);
+        var itemId = GetMenuItemId(pane.SelectedIndex);
+        var paneBoundaries = _menuPaneListComponent.PaneBoundaries[paneId];
+        var itemBoundaries = _menuPaneListComponent.PaneItemBoundaries[paneId][itemId];
+        var subPane = new MenuPaneInfo
+        {
+            ParentIndex = pane.SelectedIndex,
+            Items = item.Items,
+            SelectedIndex = -1,
+            LeftPos = paneBoundaries.OffsetLeft + paneBoundaries.OffsetWidth,
+            TopPos = paneBoundaries.OffsetTop + itemBoundaries.OffsetTop - 8
+        };
+        SetFirstMenuItemIndex(subPane);
+        return subPane;
+    }
+
+    private bool TryOpenSubmenu()
+    {
+        var submenuPane = GetSubmenuPane();
+        if (submenuPane == null) return false;
+        Dispatch(new MenuPaneOpenAction(submenuPane, true));
+        _lastMouseEntered = null;
+        return true;
+    }
+
+    private void MenuItemAction()
+    {
+        // --- If the current item points to a submenu, open it
+        if (TryOpenSubmenu()) return;
+
+        if (MenuState.OpenPanes.Count == 0)
+        {
+            var index = MenuState.SelectedIndex;
+            Dispatch(new MenuButtonSetAction(index, GetButtonPane(index), true));
+            return;
+        }
+
+        // --- Do we have a selected item on the current pane?
+        var pane = MenuState.OpenPanes.Last();
+        if (pane.SelectedIndex < 0) return;
+
+        ExecuteMenuItem(pane.Items.Flatten().ToArray()[pane.SelectedIndex]);
+    }
+
+    private void ExecuteMenuItem(UiMenuItem item)
+    {
+        if (!item.HasSubitems)
+        {
+            Dispatch(new MenuCloseAllPanesAction());
+            item.OnExecute(AppWindow.Instance.Window);
+        }
+    }
+
+    private int FindAccessKeyIndex(string code, IEnumerable<UiMenuItem> items, bool flatten = true)
+    {
+        code = code.ToLower();
+        var flattened = (flatten ? items.Flatten() : items).ToList();
+        var item = flattened.FirstOrDefault(i => i.AccessKey != null && (
+            "key" + i.AccessKey.ToLower() == code ||
+            "digit" + i.AccessKey.ToLower() == code ||
+            "numpad" + i.AccessKey.ToLower() == code));
+        if (item == null) return -1;
+        return flattened.IndexOf(item);
     }
 }

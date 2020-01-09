@@ -31,29 +31,5 @@ namespace Spect.Net.Shell.Menus
         /// The index of the selected item
         /// </summary>
         public int SelectedIndex { get; set; }
-
-        /// <summary>
-        /// Returns the flattened item structure
-        /// </summary>
-        public IEnumerable<UiMenuItem> ItemsFlattened
-        {
-            get
-            {
-                foreach (var item in Items)
-                {
-                    if (item.HasSubitems)
-                    {
-                        foreach (var subItem in item.Items)
-                        {
-                            yield return subItem;
-                        }
-                    }
-                    else
-                    {
-                        yield return item;
-                    }
-                }
-            }
-        }
     }
 }

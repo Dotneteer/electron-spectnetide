@@ -73,4 +73,83 @@ namespace Spect.Net.Shell.State.Actions
     public sealed class MenuItemUpAction : MenuActionBase
     {
     }
+
+    /// <summary>
+    /// Opens a new menu pane
+    /// </summary>
+    public sealed class MenuPaneOpenAction : MenuActionBase
+    {
+        public MenuPaneInfo Pane { get; }
+
+        public bool KeyboardAction { get; }
+        public MenuPaneOpenAction(MenuPaneInfo pane, bool keyboardAction)
+        {
+            Pane = pane;
+            KeyboardAction = keyboardAction;
+        }
+    }
+
+    /// <summary>
+    /// Closes all displayed menu panes
+    /// </summary>
+    public sealed class MenuCloseAllPanesAction : MenuActionBase
+    {
+    }
+
+    /// <summary>
+    /// Selects the specified item
+    /// </summary>
+    public sealed class MenuItemSelectAction : MenuActionBase
+    {
+        public MenuItemSelectAction(int index)
+        {
+            Index = index;
+        }
+
+        public int Index { get; }
+    }
+
+    /// <summary>
+    /// Selects the specified menu button and displays its pane
+    /// </summary>
+    public sealed class MenuButtonClickAction : MenuActionBase
+    {
+        public MenuButtonClickAction(MenuPaneInfo pane, int index)
+        {
+            Pane = pane;
+            Index = index;
+        }
+
+        public MenuPaneInfo Pane { get; }
+        public int Index { get; }
+    }
+
+    /// <summary>
+    /// Keep the last pane while moving with the mouse
+    /// </summary>
+    public sealed class MenuKeepPaneAction : MenuActionBase
+    {
+        public MenuKeepPaneAction(int paneIndex)
+        {
+            PaneIndex = paneIndex;
+        }
+
+        public int PaneIndex { get; }
+    }
+
+    /// <summary>
+    /// Point to a menu item in a menu pane
+    /// </summary>
+    public sealed class MenuItemPointAction : MenuActionBase
+    {
+        public MenuItemPointAction(int paneIndex, int itemIndex)
+        {
+            PaneIndex = paneIndex;
+            ItemIndex = itemIndex;
+        }
+
+        public int PaneIndex { get; }
+        public int ItemIndex { get; }
+
+    }
 }

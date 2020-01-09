@@ -285,11 +285,13 @@ namespace Spect.Net.Shell
             }
 
             // --- Done
-            return new MenuItem
+            var newMenuItem = new MenuItem
             {
                 Label = menuGroup.Label,
                 Submenu = pane.ToArray()
             };
+            menuGroup.MenuItem = newMenuItem;
+            return newMenuItem;
         }
     }
 }

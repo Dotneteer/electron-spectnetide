@@ -1,4 +1,7 @@
-﻿<div class="menu-pane" style="@_styleValue">
+﻿@inherits StyleAwareComponentBase
+
+<div @ref="@RootElement"
+    class="menu-pane" style="@_styleValue">
     @{
         var lastItemWasGroup = false;
         var groupJustEnded = false;
@@ -20,11 +23,13 @@
                 {
                     var subitem = item.Items[j];
                     <MenuItem Item="@subitem"
+                              ComponentInstanceID="@MenuBar.GetMenuItemId(index)"
                               ItemIndex="@index"
                               Highlight="@Highlight"
                               Selected="@(SelectedIndex == index)"
                               MenuItemPointed="@(mi => OnMenuItemPointed(mi))"
-                              MenuItemClicked="@(mi => OnMenuItemClicked(mi))" />
+                              MenuItemClicked="@(mi => OnMenuItemClicked(mi))"
+                              BoundariesChanged="@OnBoundariesChanged" />
                     index++;
                 }
                 groupJustEnded = true;
@@ -32,11 +37,14 @@
             else
             {
                 <MenuItem Item="@item"
+                          ComponentInstanceID="@MenuBar.GetMenuItemId(index)"
                           ItemIndex="@index"
                           Highlight="@Highlight"
                           Selected="@(SelectedIndex == index)"
                           MenuItemPointed="@(mi => OnMenuItemPointed(mi))"
-                          MenuItemClicked="@(mi => OnMenuItemClicked(mi))" />
+                          MenuItemClicked="@(mi => OnMenuItemClicked(mi))"
+                          BoundariesChanged="OnBoundariesChanged" />
+                index++;
             }
         }
     }
@@ -69,6 +77,18 @@
     [Parameter]
     public EventCallback<MenuItemEventArgs> MenuItemClicked { get; set; }
 
+    [Parameter]
+    public EventCallback<BoundariesEventArgs> ItemBoundaryChanged { get; set; }
+
+    /// <summary>
+    /// MenuItem boundaries
+    /// </summary>
+    public Dictionary<string, ElementBoundaries> MenuItemBoundaries { get; private set; }  =
+        new Dictionary<string, ElementBoundaries>();
+
+    /// <summary>
+    /// Update the style of the pane
+    /// </summary>
     protected override void OnParametersSet()
     {
         _styleValue = new StyleBuilder()
@@ -78,6 +98,22 @@
             .Build();
     }
 
+    /// <summary>
+    /// Store the boundaries of a particular menu item
+    /// </summary>
+    private async void OnBoundariesChanged(BoundariesEventArgs args)
+    {
+        if (args.ComponentId != null)
+        {
+            MenuItemBoundaries[args.ComponentId] = args.Boundaries;
+            await ItemBoundaryChanged.InvokeAsync(
+                new BoundariesEventArgs(args.ComponentId, args.Boundaries, ComponentInstanceID));
+        }
+    }
+
+    /// <summary>
+    /// Sign that a menu item has been pointed
+    /// </summary>
     private async Task OnMenuItemPointed(MenuItem item)
     {
         await MenuItemPointed.InvokeAsync(new MenuItemEventArgs
@@ -87,6 +123,9 @@
         });
     }
 
+    /// <summary>
+    /// Sign that a menu item has been clicked
+    /// </summary>
     private async Task OnMenuItemClicked(MenuItem item)
     {
         await MenuItemClicked.InvokeAsync(new MenuItemEventArgs
